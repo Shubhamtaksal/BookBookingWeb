@@ -1,0 +1,16 @@
+<script>
+  const CART_KEY = "bookhub_cart_v1";
+  const BOOK_KEY = "bookhub_bookings_v1";
+
+  const cart = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
+  const total = cart.reduce((s,x)=> s + (x.price * x.qty), 0);
+
+  const bookings = JSON.parse(localStorage.getItem(BOOK_KEY) || "[]");
+  if (cart.length) {
+    bookings.unshift({ time: Date.now(), items: cart, total });
+    localStorage.setItem(BOOK_KEY, JSON.stringify(bookings));
+  }
+
+  localStorage.removeItem(CART_KEY);
+  window.addEventListener("load", () => document.body.classList.remove("page-enter"));
+</script>

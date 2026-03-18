@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login • BookHub</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --bh-bg1:#0f172a;
+      --bh-bg2:#1d4ed8;
+      --bh-bg3:#0ea5e9;
+      --bh-card:rgba(255,255,255,.95);
+      --bh-card2:rgba(255,255,255,.12);
+      --bh-text:#0f172a;
+      --bh-muted:#64748b;
+      --bh-border:#dbe7fb;
+      --bh-primary:#2563eb;
+      --bh-shadow:0 28px 70px rgba(0,0,0,.22);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; }
+
+    body{
+      min-height:100vh;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(255,255,255,.10), transparent 18%),
+        radial-gradient(circle at 90% 20%, rgba(255,255,255,.10), transparent 18%),
+        radial-gradient(circle at 80% 80%, rgba(255,255,255,.08), transparent 20%),
+        linear-gradient(135deg,var(--bh-bg1) 0%, var(--bh-bg2) 55%, var(--bh-bg3) 100%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .bg-shapes{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+
+    .shape{
+      position:absolute;
+      border-radius:50%;
+      filter:blur(8px);
+      opacity:.24;
+      animation:floatShape 10s ease-in-out infinite;
+    }
+
+    .shape.s1{
+      width:220px;height:220px;
+      background:rgba(255,255,255,.16);
+      top:-40px;left:-50px;
+    }
+    .shape.s2{
+      width:180px;height:180px;
+      background:rgba(14,165,233,.22);
+      top:15%;right:-40px;
+      animation-delay:1.5s;
+    }
+    .shape.s3{
+      width:240px;height:240px;
+      background:rgba(37,99,235,.18);
+      bottom:-70px;left:12%;
+      animation-delay:3s;
+    }
+    .shape.s4{
+      width:160px;height:160px;
+      background:rgba(255,255,255,.12);
+      bottom:40px;right:12%;
+      animation-delay:2s;
+    }
+
+    @keyframes floatShape{
+      0%,100%{transform:translateY(0) translateX(0)}
+      50%{transform:translateY(-14px) translateX(8px)}
+    }
+
+    .login-shell{
+      width:100%;
+      max-width:1160px;
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:22px;
+      align-items:stretch;
+      position:relative;
+      z-index:2;
+    }
+
+    .showcase,
+    .login-card{
+      border-radius:34px;
+      overflow:hidden;
+      box-shadow:var(--bh-shadow);
+      position:relative;
+    }
+
+    .showcase{
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.16);
+      backdrop-filter:blur(14px);
+      color:#fff;
+      padding:40px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+
+    .showcase::before{
+      content:"";
+      position:absolute;
+      width:280px;
+      height:280px;
+      right:-80px;
+      top:-80px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,255,255,.16), transparent 65%);
+    }
+
+    .showcase-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      width:max-content;
+      padding:10px 16px;
+      border-radius:999px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.16);
+      font-weight:800;
+      margin-bottom:22px;
+      animation:fadeUp .6s ease;
+    }
+
+    .showcase-title{
+      font-size:clamp(2.2rem, 3.6vw, 3.8rem);
+      line-height:1.06;
+      font-weight:900;
+      margin-bottom:16px;
+      max-width:560px;
+      animation:fadeUp .8s ease;
+    }
+
+    .showcase-sub{
+      color:rgba(255,255,255,.82);
+      font-size:1.03rem;
+      line-height:1.75;
+      max-width:560px;
+      animation:fadeUp 1s ease;
+    }
+
+    .showcase-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+      margin-top:26px;
+    }
+
+    .show-box{
+      padding:16px;
+      border-radius:22px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.12);
+      animation:fadeUp 1.1s ease;
+    }
+
+    .show-box-icon{
+      width:46px;
+      height:46px;
+      display:grid;
+      place-items:center;
+      border-radius:16px;
+      background:rgba(255,255,255,.16);
+      margin-bottom:12px;
+      font-size:1.12rem;
+    }
+
+    .show-box h4{
+      font-size:1rem;
+      font-weight:900;
+      margin-bottom:6px;
+    }
+
+    .show-box p{
+      color:rgba(255,255,255,.74);
+      margin:0;
+      font-size:.9rem;
+      line-height:1.55;
+    }
+
+    .showcase-mini{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:26px;
+    }
+
+    .mini-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.12);
+      font-weight:800;
+      color:#fff;
+      animation:fadeUp 1.2s ease;
+    }
+
+    .login-card{
+      background:rgba(255,255,255,.94);
+      border:1px solid rgba(255,255,255,.85);
+      backdrop-filter:blur(16px);
+      padding:32px;
+    }
+
+    .login-glow{
+      position:absolute;
+      width:220px;
+      height:220px;
+      right:-60px;
+      top:-60px;
+      background:radial-gradient(circle, rgba(37,99,235,.16), transparent 70%);
+      pointer-events:none;
+    }
+
+    .brand-row{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:22px;
+      animation:fadeUp .6s ease;
+    }
+
+    .brand-icon{
+      width:54px;
+      height:54px;
+      border-radius:18px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,#0f172a,#2563eb);
+      color:#fff;
+      font-size:1.3rem;
+      box-shadow:0 14px 30px rgba(37,99,235,.18);
+    }
+
+    .brand-title{
+      font-size:1.35rem;
+      font-weight:900;
+      color:var(--bh-text);
+      margin-bottom:2px;
+    }
+
+    .brand-sub{
+      color:var(--bh-muted);
+      font-size:.92rem;
+    }
+
+    .login-title{
+      font-size:2rem;
+      font-weight:900;
+      color:var(--bh-text);
+      margin-bottom:8px;
+      line-height:1.12;
+      animation:fadeUp .8s ease;
+    }
+
+    .login-copy{
+      color:var(--bh-muted);
+      margin-bottom:22px;
+      font-size:.96rem;
+      line-height:1.65;
+      animation:fadeUp 1s ease;
+    }
+
+    .role-switch{
+      display:flex;
+      gap:10px;
+      margin-bottom:18px;
+      animation:fadeUp 1.05s ease;
+    }
+
+    .role-pill{
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      min-height:48px;
+      border-radius:16px;
+      border:1px solid #dbe3ef;
+      background:#fff;
+      font-weight:900;
+      color:#334155;
+      cursor:pointer;
+      transition:.25s ease;
+    }
+
+    .role-pill.active{
+      background:#eef4ff;
+      color:var(--bh-primary);
+      border-color:#cfe0ff;
+    }
+
+    .input-label{
+      font-weight:800;
+      color:#111827;
+      margin-bottom:8px;
+      font-size:.95rem;
+    }
+
+    .input-group-custom{
+      position:relative;
+      margin-bottom:16px;
+      animation:fadeUp 1.1s ease;
+    }
+
+    .input-icon{
+      position:absolute;
+      left:16px;
+      top:50%;
+      transform:translateY(-50%);
+      color:#64748b;
+      font-size:1rem;
+      z-index:2;
+    }
+
+    .soft-input{
+      min-height:56px;
+      border-radius:18px;
+      border:1px solid var(--bh-border);
+      background:#fff;
+      padding-left:46px;
+      padding-right:14px;
+      font-weight:700;
+    }
+
+    .soft-input:focus{
+      border-color:#60a5fa;
+      box-shadow:0 0 0 .2rem rgba(37,99,235,.08);
+    }
+
+    .login-btn{
+      width:100%;
+      min-height:58px;
+      border:none;
+      border-radius:18px;
+      background:linear-gradient(135deg,#0f172a,#2563eb);
+      color:#fff;
+      font-weight:900;
+      font-size:1rem;
+      box-shadow:0 18px 34px rgba(37,99,235,.18);
+      transition:transform .18s ease, box-shadow .18s ease;
+      animation:fadeUp 1.15s ease;
+    }
+
+    .login-btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 22px 38px rgba(37,99,235,.24);
+    }
+
+    .login-footer{
+      margin-top:16px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      animation:fadeUp 1.2s ease;
+    }
+
+    .helper-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:#f8fbff;
+      border:1px solid #e7eefb;
+      color:#334155;
+      font-size:.82rem;
+      font-weight:800;
+    }
+
+    .login-footer a{
+      color:var(--bh-primary);
+      font-weight:800;
+      text-decoration:none;
+    }
+
+    .alert{
+      border-radius:18px;
+      font-weight:700;
+      margin-bottom:18px;
+      animation:fadeUp .7s ease;
+    }
+
+    @keyframes fadeUp{
+      from{opacity:0;transform:translateY(16px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    @media (max-width: 991px){
+      .login-shell{
+        grid-template-columns:1fr;
+        max-width:640px;
+      }
+
+      .showcase{
+        display:none;
+      }
+    }
+
+    @media (max-width: 576px){
+      .login-card{
+        padding:24px;
+        border-radius:28px;
+      }
+
+      .login-title{
+        font-size:1.7rem;
+      }
+
+      .role-switch{
+        flex-direction:column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-shapes">
+    <span class="shape s1"></span>
+    <span class="shape s2"></span>
+    <span class="shape s3"></span>
+    <span class="shape s4"></span>
+  </div>
+
+  <div class="login-shell">
+    <div class="showcase">
+      <div>
+        <div class="showcase-badge">
+          <i class="bi bi-stars"></i> Welcome to BookHub
+        </div>
+
+        <div class="showcase-title">
+          Login to continue your premium reading journey.
+        </div>
+
+        <div class="showcase-sub">
+          Explore a bookstore experience with smooth browsing, advanced UI, animated interactions, and a cleaner book shopping flow for desktop and mobile.
+        </div>
+
+        <div class="showcase-grid">
+          <div class="show-box">
+            <div class="show-box-icon"><i class="bi bi-book-half"></i></div>
+            <h4>Smart Browsing</h4>
+            <p>Discover books with richer layouts and elegant previews.</p>
+          </div>
+
+          <div class="show-box">
+            <div class="show-box-icon"><i class="bi bi-lightning-charge"></i></div>
+            <h4>Fast Flow</h4>
+            <p>Quick cart, faster navigation, and smoother checkout steps.</p>
+          </div>
+
+          <div class="show-box">
+            <div class="show-box-icon"><i class="bi bi-bag-check"></i></div>
+            <h4>Easy Orders</h4>
+            <p>Track your books, payment, delivery, and order status easily.</p>
+          </div>
+
+          <div class="show-box">
+            <div class="show-box-icon"><i class="bi bi-phone"></i></div>
+            <h4>Responsive UI</h4>
+            <p>Optimized design for mobile screens and larger desktops.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="showcase-mini">
+        <span class="mini-chip"><i class="bi bi-shield-check"></i> Secure access</span>
+        <span class="mini-chip"><i class="bi bi-magic"></i> Smooth animation</span>
+        <span class="mini-chip"><i class="bi bi-bookmarks"></i> Rich bookstore feel</span>
+      </div>
+    </div>
+
+    <div class="login-card">
+      <div class="login-glow"></div>
+
+      <div class="brand-row">
+        <div class="brand-icon">
+          <i class="bi bi-book-half"></i>
+        </div>
+        <div>
+          <div class="brand-title">BookHub</div>
+          <div class="brand-sub">Modern bookstore sign in</div>
+        </div>
+      </div>
+
+      <div class="login-title">Welcome back</div>
+      <div class="login-copy">
+        Sign in to browse books, manage your cart, track orders, and continue with a richer bookstore experience.
+      </div>
+
+      <% if (error) { %>
+        <div class="alert alert-danger">
+          <i class="bi bi-exclamation-triangle"></i> <%= error %>
+        </div>
+      <% } %>
+
+      <form method="POST" action="/login" id="loginForm">
+        <input type="hidden" name="loginType" id="loginTypeInput" value="user">
+
+        <div class="role-switch">
+          <div class="role-pill active" data-role="user">
+            <i class="bi bi-person"></i> User Login
+          </div>
+          <div class="role-pill" data-role="admin">
+            <i class="bi bi-shield-lock"></i> Admin Login
+          </div>
+        </div>
+
+        <label class="input-label">Email Address</label>
+        <div class="input-group-custom">
+          <i class="bi bi-envelope input-icon"></i>
+          <input
+            type="email"
+            name="email"
+            class="form-control soft-input"
+            placeholder="Enter your email"
+            required
+          >
+        </div>
+
+        <label class="input-label">Password</label>
+        <div class="input-group-custom">
+          <i class="bi bi-lock input-icon"></i>
+          <input
+            type="password"
+            name="password"
+            class="form-control soft-input"
+            placeholder="Enter your password"
+            required
+          >
+        </div>
+
+        <button class="login-btn">
+          <i class="bi bi-box-arrow-in-right"></i> Login Now
+        </button>
+      </form>
+
+      <div class="login-footer">
+        <div class="helper-chip">
+          <i class="bi bi-stars"></i> Premium animated login
+        </div>
+
+        <a href="/register">Create account</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const pills = document.querySelectorAll(".role-pill");
+      const hidden = document.getElementById("loginTypeInput");
+
+      pills.forEach((pill) => {
+        pill.addEventListener("click", () => {
+          pills.forEach((p) => p.classList.remove("active"));
+          pill.classList.add("active");
+          hidden.value = pill.dataset.role;
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

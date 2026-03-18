@@ -1,0 +1,38 @@
+{
+  "name": "bookhub",
+  "version": "1.0.0",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "ejs": "^3.1.10",
+    "express": "^4.22.1",
+    "express-session": "^1.19.0",
+    "helmet": "^8.1.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.20.0",
+    "pdfkit": "^0.18.0",
+    "razorpay": "^2.9.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  },
+  "description": "��#\u0000 \u0000B\u0000o\u0000o\u0000k\u0000B\u0000o\u0000o\u0000k\u0000i\u0000n\u0000g\u0000W\u0000e\u0000b\u0000\r\u0000 \u0000#\u0000 \u0000B\u0000o\u0000o\u0000k\u0000B\u0000o\u0000o\u0000k\u0000i\u0000n\u0000g\u0000W\u0000e\u0000b\u0000\r\u0000 \u0000",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shubhamtaksal/BookBookingWeb.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Shubhamtaksal/BookBookingWeb/issues"
+  },
+  "homepage": "https://github.com/Shubhamtaksal/BookBookingWeb#readme"
+}

@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Books • BookHub</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --bh-bg:#f6f8fc;
+      --bh-card:#ffffff;
+      --bh-text:#0f172a;
+      --bh-muted:#64748b;
+      --bh-border:#e6eaf2;
+      --bh-primary:#2563eb;
+      --bh-primary2:#0ea5e9;
+      --bh-shadow:0 18px 45px rgba(15,23,42,.10);
+      --bh-shadow2:0 10px 28px rgba(15,23,42,.08);
+      --bh-radius:24px;
+      --bh-radius2:30px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{overflow-x:hidden}
+
+    body{
+      background:
+        radial-gradient(circle at top left, rgba(37,99,235,.10), transparent 22%),
+        radial-gradient(circle at top right, rgba(14,165,233,.08), transparent 18%),
+        linear-gradient(180deg,#f8fbff,#eef4ff);
+      color:var(--bh-text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    }
+
+    .floating-books{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+      z-index:0;
+    }
+
+    .float-book{
+      position:absolute;
+      color:rgba(37,99,235,.10);
+      filter:blur(.2px);
+      animation:floatBook 14s ease-in-out infinite;
+      user-select:none;
+    }
+
+    .float-book i{font-size:58px}
+
+    .float-book.b1{top:10%;left:6%;animation-duration:12s}
+    .float-book.b2{top:18%;right:10%;animation-duration:15s;animation-delay:1s}
+    .float-book.b3{bottom:18%;left:12%;animation-duration:13s;animation-delay:2s}
+    .float-book.b4{bottom:10%;right:8%;animation-duration:16s;animation-delay:3s}
+    .float-book.b5{top:48%;left:48%;animation-duration:14s;animation-delay:1.5s}
+
+    @keyframes floatBook{
+      0%,100%{transform:translateY(0) rotate(0deg) scale(1);opacity:.45}
+      25%{transform:translateY(-18px) rotate(4deg) scale(1.04);opacity:.7}
+      50%{transform:translateY(10px) rotate(-3deg) scale(.98);opacity:.5}
+      75%{transform:translateY(-12px) rotate(2deg) scale(1.02);opacity:.68}
+    }
+
+    .books-page{
+      position:relative;
+      z-index:1;
+      padding:26px 0 48px;
+    }
+
+    .hero-shell{
+      background:linear-gradient(135deg, rgba(255,255,255,.94), rgba(255,255,255,.88));
+      border:1px solid rgba(255,255,255,.72);
+      box-shadow:var(--bh-shadow);
+      border-radius:var(--bh-radius2);
+      padding:28px;
+      margin-bottom:22px;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .hero-shell::before{
+      content:"";
+      position:absolute;
+      width:280px;
+      height:280px;
+      right:-90px;
+      top:-90px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(37,99,235,.16), transparent 65%);
+    }
+
+    .hero-title{
+      font-size:2.3rem;
+      font-weight:900;
+      margin-bottom:6px;
+      line-height:1.08;
+    }
+
+    .hero-sub{
+      color:var(--bh-muted);
+      margin-bottom:20px;
+      max-width:700px;
+    }
+
+    .search-panel{
+      background:#fff;
+      border:1px solid var(--bh-border);
+      border-radius:24px;
+      box-shadow:var(--bh-shadow2);
+      padding:18px;
+    }
+
+    .filter-input,
+    .filter-select{
+      min-height:52px;
+      border-radius:16px;
+      border:1px solid #dbe3ef;
+      box-shadow:none !important;
+    }
+
+    .filter-input:focus,
+    .filter-select:focus{
+      border-color:#60a5fa;
+    }
+
+    .apply-btn{
+      min-height:52px;
+      width:100%;
+      border:none;
+      border-radius:16px;
+      background:linear-gradient(135deg,#0f172a,#2563eb);
+      color:#fff;
+      font-weight:900;
+      box-shadow:0 16px 28px rgba(37,99,235,.20);
+    }
+
+    .quick-cats{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .quick-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 12px;
+      border-radius:999px;
+      border:1px solid #dbe3ef;
+      background:#fff;
+      color:#334155;
+      text-decoration:none;
+      font-size:.84rem;
+      font-weight:800;
+      transition:.25s ease;
+    }
+
+    .quick-chip:hover,
+    .quick-chip.active{
+      background:#eef4ff;
+      color:var(--bh-primary);
+      border-color:#cfe0ff;
+      transform:translateY(-1px);
+    }
+
+    .section-bar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin:18px 0 12px;
+      flex-wrap:wrap;
+    }
+
+    .result-text{
+      color:#475569;
+      font-weight:700;
+    }
+
+    .result-text strong{
+      color:#111827;
+    }
+
+    .view-note{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.7);
+      border:1px solid var(--bh-border);
+      color:var(--bh-muted);
+      font-size:.82rem;
+      font-weight:700;
+    }
+
+    .book-card{
+      position:relative;
+      background:#fff;
+      border:1px solid var(--bh-border);
+      border-radius:24px;
+      overflow:hidden;
+      box-shadow:var(--bh-shadow2);
+      transition:.35s ease;
+      height:100%;
+    }
+
+    .book-card:hover{
+      transform:translateY(-10px) scale(1.02);
+      box-shadow:0 28px 56px rgba(15,23,42,.14);
+    }
+
+    .book-card::before{
+      content:"";
+      position:absolute;
+      top:0;
+      left:-120%;
+      width:70%;
+      height:100%;
+      background:linear-gradient(120deg,transparent,rgba(255,255,255,.4),transparent);
+      transform:skewX(-18deg);
+      opacity:0;
+      z-index:1;
+    }
+
+    .book-card:hover::before{
+      opacity:1;
+      animation:shine 1s ease;
+    }
+
+    @keyframes shine{
+      0%{left:-120%}
+      100%{left:130%}
+    }
+
+    .book-card::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      bottom:-40px;
+      transform:translateX(-50%);
+      width:70%;
+      height:60px;
+      background:radial-gradient(circle, rgba(59,130,246,.55), transparent 70%);
+      opacity:0;
+      transition:.35s;
+      pointer-events:none;
+    }
+
+    .book-card:hover::after{
+      opacity:1;
+      bottom:-20px;
+    }
+
+    .discount-badge{
+      position:absolute;
+      top:12px;
+      left:12px;
+      z-index:3;
+      background:#ef4444;
+      color:#fff;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:.78rem;
+      font-weight:900;
+      box-shadow:0 8px 16px rgba(0,0,0,.14);
+      animation:pulseBadge 2s infinite;
+    }
+
+    @keyframes pulseBadge{
+      0%,100%{transform:scale(1)}
+      50%{transform:scale(1.08)}
+    }
+
+    .book-cover{
+      perspective:1000px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:18px 18px 8px;
+      min-height:270px;
+      position:relative;
+      z-index:2;
+    }
+
+    .book-cover img{
+      width:180px;
+      height:230px;
+      object-fit:cover;
+      border-radius:16px;
+      background:#fff;
+      border:1px solid rgba(0,0,0,.05);
+      box-shadow:0 18px 36px rgba(15,23,42,.14);
+      transform-style:preserve-3d;
+      transition:transform .45s ease, box-shadow .45s ease;
+    }
+
+    .book-card:hover .book-cover img{
+      transform:rotateY(-10deg) rotateX(3deg) scale(1.07);
+      box-shadow:0 24px 44px rgba(15,23,42,.18);
+    }
+
+    .quick-preview{
+      position:absolute;
+      left:14px;
+      right:14px;
+      bottom:14px;
+      background:rgba(15,23,42,.94);
+      color:#fff;
+      border-radius:18px;
+      padding:14px;
+      backdrop-filter:blur(12px);
+      opacity:0;
+      visibility:hidden;
+      transform:translateY(16px) scale(.97);
+      transition:all .28s ease;
+      z-index:4;
+    }
+
+    .book-card:hover .quick-preview{
+      opacity:1;
+      visibility:visible;
+      transform:translateY(0) scale(1);
+    }
+
+    .qp-title{
+      font-size:1rem;
+      font-weight:900;
+      margin-bottom:4px;
+      line-height:1.3;
+    }
+
+    .qp-author,
+    .qp-stock{
+      font-size:.86rem;
+      color:rgba(255,255,255,.78);
+      margin-bottom:4px;
+    }
+
+    .qp-price{
+      font-size:1.15rem;
+      font-weight:900;
+      color:#7dd3fc;
+      margin-top:6px;
+    }
+
+    .book-body{
+      padding:14px 18px 18px;
+      position:relative;
+      z-index:2;
+    }
+
+    .book-category{
+      color:var(--bh-primary);
+      font-size:.8rem;
+      font-weight:800;
+      margin-bottom:6px;
+      text-transform:capitalize;
+    }
+
+    .book-title{
+      font-size:1.05rem;
+      font-weight:900;
+      line-height:1.35;
+      min-height:50px;
+      margin-bottom:6px;
+    }
+
+    .book-author{
+      color:var(--bh-muted);
+      font-size:.92rem;
+      margin-bottom:8px;
+    }
+
+    .stars{
+      color:#f59e0b;
+      font-size:.84rem;
+      margin-bottom:10px;
+    }
+
+    .price-row{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+
+    .price-row strong{
+      color:var(--bh-primary);
+      font-size:1.18rem;
+      font-weight:900;
+    }
+
+    .price-row span{
+      color:#94a3b8;
+      text-decoration:line-through;
+      font-weight:700;
+    }
+
+    .stock-row{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      color:#334155;
+      font-size:.86rem;
+      font-weight:700;
+      margin-bottom:14px;
+    }
+
+    .card-actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .card-btn{
+      min-height:44px;
+      border-radius:14px;
+      font-weight:900;
+      transition:.25s ease;
+    }
+
+    .card-btn:hover{
+      transform:translateY(-2px);
+    }
+
+    .empty-box{
+      background:#fff;
+      border:1px solid var(--bh-border);
+      border-radius:26px;
+      box-shadow:var(--bh-shadow);
+      padding:42px 24px;
+      text-align:center;
+    }
+
+    .empty-box i{
+      font-size:3rem;
+      color:#94a3b8;
+      margin-bottom:14px;
+    }
+
+    .empty-box h3{
+      font-weight:900;
+      margin-bottom:8px;
+    }
+
+    .empty-box p{
+      color:var(--bh-muted);
+      margin-bottom:0;
+    }
+
+    @media (max-width: 991px){
+      .hero-title{
+        font-size:2rem;
+      }
+    }
+
+    @media (max-width: 767px){
+      .hero-shell{
+        padding:20px;
+      }
+
+      .book-cover{
+        min-height:240px;
+      }
+
+      .book-cover img{
+        width:150px;
+        height:200px;
+      }
+
+      .card-actions{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="floating-books">
+    <span class="float-book b1"><i class="bi bi-book"></i></span>
+    <span class="float-book b2"><i class="bi bi-book-half"></i></span>
+    <span class="float-book b3"><i class="bi bi-journal-bookmark"></i></span>
+    <span class="float-book b4"><i class="bi bi-book"></i></span>
+    <span class="float-book b5"><i class="bi bi-journal-richtext"></i></span>
+  </div>
+
+  <%- include('partials/navbar') %>
+
+  <div class="container books-page">
+    <div class="hero-shell">
+      <div class="hero-title">Explore Books</div>
+      <p class="hero-sub">Search, filter, and discover premium books with richer animations, better previews, and a more professional bookstore interface.</p>
+
+      <div class="search-panel">
+        <form action="/books" method="GET">
+          <div class="row g-3">
+            <div class="col-lg-5">
+              <input
+                type="text"
+                name="q"
+                value="<%= q || '' %>"
+                class="form-control filter-input"
+                placeholder="Search by title, author, category..."
+              >
+            </div>
+
+            <div class="col-lg-3">
+              <select name="category" class="form-select filter-select">
+                <option value="">All Categories</option>
+                <% categories.forEach((c) => { %>
+                  <option value="<%= c.name %>" <%= category === c.name ? "selected" : "" %>><%= c.name %></option>
+                <% }) %>
+              </select>
+            </div>
+
+            <div class="col-lg-2">
+              <select class="form-select filter-select" disabled>
+                <option>Sort: Default</option>
+              </select>
+            </div>
+
+            <div class="col-lg-2">
+              <button class="apply-btn">
+                <i class="bi bi-funnel"></i> Apply
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <div class="quick-cats">
+          <a href="/books" class="quick-chip <%= !category ? 'active' : '' %>">
+            <i class="bi bi-grid"></i> All
+          </a>
+          <% categories.forEach((c) => { %>
+            <a href="/books?category=<%= encodeURIComponent(c.name) %>" class="quick-chip <%= category === c.name ? 'active' : '' %>">
+              <i class="bi bi-book"></i> <%= c.name %>
+            </a>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-bar">
+      <div class="result-text">
+        <i class="bi bi-journal-bookmark"></i>
+        <strong><%= books.length %></strong> book(s) found
+      </div>
+
+      <div class="view-note">
+        <i class="bi bi-stars"></i> Hover on a book for quick preview
+      </div>
+    </div>
+
+    <% if (!books.length) { %>
+      <div class="empty-box">
+        <i class="bi bi-search"></i>
+        <h3>No books found</h3>
+        <p>Try another search keyword or change the category filter.</p>
+      </div>
+    <% } else { %>
+      <div class="row g-4">
+        <% books.forEach((b) => { 
+          const finalPrice = Math.max(0, Number(b.price || 0) - Math.round((Number(b.price || 0) * Number(b.discount || 0)) / 100));
+        %>
+          <div class="col-md-6 col-lg-4 col-xl-3">
+            <div class="book-card">
+              <% if (Number(b.discount || 0) > 0) { %>
+                <div class="discount-badge"><%= b.discount %>% OFF</div>
+              <% } %>
+
+              <div class="book-cover">
+                <img
+                  src="<%= b.image || '/uploads/default.png' %>"
+                  alt="<%= b.name %>"
+                  onerror="this.onerror=null;this.src='/uploads/default.png'"
+                >
+              </div>
+
+              <div class="quick-preview">
+                <div class="qp-title"><%= b.name %></div>
+                <div class="qp-author"><i class="bi bi-person"></i> <%= b.author %></div>
+                <div class="qp-stock"><i class="bi bi-box"></i> Stock: <%= b.available %></div>
+                <div class="qp-price">₹<%= finalPrice %></div>
+
+                <div class="d-flex gap-2 mt-2">
+                  <a href="/books/<%= b.id %>" class="btn btn-light btn-sm flex-fill">View</a>
+                  <a href="/cart/add/<%= b.id %>" class="btn btn-primary btn-sm flex-fill">Add</a>
+                </div>
+              </div>
+
+              <div class="book-body">
+                <div class="book-category"><%= b.category_name || 'Book' %></div>
+                <div class="book-title"><%= b.name %></div>
+                <div class="book-author"><i class="bi bi-person"></i> <%= b.author %></div>
+
+                <div class="stars">
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-half"></i>
+                </div>
+
+                <div class="price-row">
+                  <strong>₹<%= finalPrice %></strong>
+                  <% if (Number(b.discount || 0) > 0) { %>
+                    <span>₹<%= b.price %></span>
+                  <% } %>
+                </div>
+
+                <div class="stock-row">
+                  <i class="bi bi-box-seam"></i> In Stock: <%= b.available %>
+                </div>
+
+                <div class="card-actions">
+                  <a href="/books/<%= b.id %>" class="btn btn-outline-secondary card-btn">View</a>
+                  <a href="/cart/add/<%= b.id %>" class="btn btn-primary card-btn">Add</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+
+  <%- include('partials/footer') %>
+</body>
+</html>

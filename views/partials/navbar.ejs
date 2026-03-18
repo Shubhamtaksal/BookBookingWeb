@@ -1,0 +1,141 @@
+<link rel="stylesheet" href="/css/navbar.css">
+
+<nav class="bh-navbar-wrap">
+  <div class="container">
+    <nav class="navbar navbar-expand-lg bh-navbar">
+      
+      <!-- LOGO -->
+      <a class="navbar-brand bh-brand" href="/">
+        <i class="bi bi-book-half"></i>
+        <span>BookHub</span>
+      </a>
+
+      <!-- TOGGLER -->
+      <button class="navbar-toggler bh-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#bhNavbar">
+        <i class="bi bi-list"></i>
+      </button>
+
+      <!-- NAV LINKS -->
+      <div class="collapse navbar-collapse" id="bhNavbar">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0 bh-nav-links">
+
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="/books">Books</a>
+          </li>
+
+          <% if (user) { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/wishlist">Wishlist</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/my-orders">My Orders</a>
+            </li>
+          <% } %>
+
+          <% if (isAdmin) { %>
+            <li class="nav-item">
+              <a class="nav-link text-warning fw-bold" href="/admin">
+                <i class="bi bi-speedometer2"></i> Admin
+              </a>
+            </li>
+          <% } %>
+
+        </ul>
+
+        <!-- RIGHT SIDE -->
+        <div class="bh-actions d-flex align-items-center gap-2 flex-wrap">
+
+          <% if (user) { %>
+
+            <!-- WISHLIST -->
+            <a href="/wishlist" class="btn bh-outline-btn position-relative">
+              <i class="bi bi-heart"></i>
+              <span>Wishlist</span>
+              <span class="bh-cart-badge">
+                <%= typeof wishlistCount !== 'undefined' ? wishlistCount : 0 %>
+              </span>
+            </a>
+
+          <% } %>
+
+          <!-- CART -->
+          <a href="/cart" class="btn bh-cart-btn position-relative">
+            <i class="bi bi-cart3"></i>
+            <span>Cart</span>
+            <span class="bh-cart-badge">
+              <%= typeof cartCount !== 'undefined' ? cartCount : 0 %>
+            </span>
+          </a>
+
+          <% if (!user) { %>
+
+            <a href="/login" class="btn bh-outline-btn">
+              Login
+            </a>
+
+            <a href="/register" class="btn bh-primary-btn">
+              Register
+            </a>
+
+          <% } else { %>
+
+            <!-- USER DROPDOWN -->
+            <div class="dropdown">
+              <button class="btn bh-user-btn dropdown-toggle" data-bs-toggle="dropdown">
+                <i class="bi bi-person-circle"></i>
+                <span>
+                  <%= user.fullname ? user.fullname.split(' ')[0] : 'User' %>
+                </span>
+              </button>
+
+              <ul class="dropdown-menu dropdown-menu-end bh-user-menu">
+
+                <li>
+                  <a class="dropdown-item" href="/profile">
+                    <i class="bi bi-person"></i> Profile
+                  </a>
+                </li>
+
+                <li>
+                  <a class="dropdown-item" href="/wishlist">
+                    <i class="bi bi-heart"></i> Wishlist
+                  </a>
+                </li>
+
+                <li>
+                  <a class="dropdown-item" href="/my-orders">
+                    <i class="bi bi-bag-check"></i> Orders
+                  </a>
+                </li>
+
+                <% if (isAdmin) { %>
+                  <li>
+                    <a class="dropdown-item" href="/admin">
+                      <i class="bi bi-speedometer2"></i> Admin Dashboard
+                    </a>
+                  </li>
+                <% } %>
+
+                <li><hr class="dropdown-divider"></li>
+
+                <li>
+                  <a class="dropdown-item text-danger" href="/logout">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                  </a>
+                </li>
+
+              </ul>
+            </div>
+
+          <% } %>
+
+        </div>
+      </div>
+    </nav>
+  </div>
+</nav>

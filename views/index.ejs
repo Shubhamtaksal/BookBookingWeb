@@ -1,0 +1,808 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BookHub • Premium Book Store</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/navbar.css">
+  <link rel="stylesheet" href="/css/common-footer.css">
+
+  <style>
+    :root{
+      --bh-bg:#f6f8fc;
+      --bh-card:#ffffff;
+      --bh-text:#0f172a;
+      --bh-muted:#64748b;
+      --bh-border:#e6eaf2;
+      --bh-primary:#2563eb;
+      --bh-primary2:#0ea5e9;
+      --bh-success:#16a34a;
+      --bh-shadow:0 18px 45px rgba(15,23,42,.10);
+      --bh-shadow2:0 10px 30px rgba(15,23,42,.08);
+      --bh-radius:22px;
+      --bh-radius2:30px;
+    }
+
+    *{box-sizing:border-box}
+
+    body.bh-body{
+      background:
+        radial-gradient(1200px 500px at 20% 10%, rgba(37,99,235,.10), transparent 60%),
+        radial-gradient(900px 450px at 90% 20%, rgba(14,165,233,.08), transparent 60%),
+        linear-gradient(180deg,#f8fbff,#eef4ff);
+      color:var(--bh-text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    }
+
+    .bh-page{
+      position:relative;
+      overflow:hidden;
+    }
+
+    .bh-floating-shapes{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+      z-index:0;
+    }
+
+    .bh-shape{
+      position:absolute;
+      border-radius:50%;
+      filter:blur(2px);
+      opacity:.35;
+      animation:floaty 12s ease-in-out infinite;
+    }
+
+    .bh-shape.s1{
+      width:220px;height:220px;
+      left:-60px;top:100px;
+      background:radial-gradient(circle, rgba(37,99,235,.22), transparent 65%);
+    }
+
+    .bh-shape.s2{
+      width:180px;height:180px;
+      right:-40px;top:180px;
+      background:radial-gradient(circle, rgba(14,165,233,.22), transparent 65%);
+      animation-delay:1.2s;
+    }
+
+    .bh-shape.s3{
+      width:260px;height:260px;
+      left:8%;bottom:160px;
+      background:radial-gradient(circle, rgba(59,130,246,.12), transparent 65%);
+      animation-delay:2.1s;
+    }
+
+    @keyframes floaty{
+      0%,100%{transform:translateY(0) translateX(0)}
+      50%{transform:translateY(-18px) translateX(10px)}
+    }
+
+    .bh-hero{
+      position:relative;
+      z-index:1;
+      padding:30px 0 20px;
+    }
+
+    .bh-hero-surface{
+      background:rgba(255,255,255,.78);
+      backdrop-filter:blur(12px);
+      border:1px solid rgba(255,255,255,.85);
+      border-radius:34px;
+      box-shadow:var(--bh-shadow);
+      padding:34px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .bh-hero-surface::before{
+      content:"";
+      position:absolute;
+      width:320px;
+      height:320px;
+      right:-100px;
+      top:-120px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(37,99,235,.16), transparent 65%);
+    }
+
+    .bh-hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      background:#eff6ff;
+      color:var(--bh-primary);
+      border:1px solid #dbeafe;
+      border-radius:999px;
+      padding:10px 16px;
+      font-weight:900;
+      margin-bottom:18px;
+    }
+
+    .bh-hero-title{
+      font-size:clamp(2.2rem,4vw,4rem);
+      line-height:1.05;
+      font-weight:900;
+      letter-spacing:-.03em;
+      margin-bottom:14px;
+      max-width:700px;
+    }
+
+    .bh-hero-title span{
+      background:linear-gradient(135deg,var(--bh-primary),var(--bh-primary2));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+
+    .bh-hero-sub{
+      color:var(--bh-muted);
+      font-size:1.05rem;
+      line-height:1.75;
+      max-width:640px;
+      margin-bottom:24px;
+    }
+
+    .bh-hero-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:26px;
+    }
+
+    .bh-btn{
+      min-height:52px;
+      border-radius:16px;
+      padding:12px 18px;
+      font-weight:900;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      text-decoration:none;
+    }
+
+    .bh-btn-primary{
+      color:#fff;
+      background:linear-gradient(135deg,#0f172a,#2563eb);
+      border:none;
+      box-shadow:0 18px 34px rgba(37,99,235,.18);
+    }
+
+    .bh-btn-primary:hover{
+      color:#fff;
+    }
+
+    .bh-btn-outline{
+      color:#0f172a;
+      background:#fff;
+      border:1px solid #dbe3ef;
+    }
+
+    .bh-hero-stats{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+      margin-top:8px;
+    }
+
+    .bh-stat{
+      background:#fff;
+      border:1px solid var(--bh-border);
+      border-radius:20px;
+      box-shadow:var(--bh-shadow2);
+      padding:18px;
+    }
+
+    .bh-stat-num{
+      font-size:1.5rem;
+      font-weight:900;
+      color:#111827;
+    }
+
+    .bh-stat-text{
+      color:var(--bh-muted);
+      font-size:.92rem;
+      margin-top:4px;
+    }
+
+    .bh-hero-visual{
+      position:relative;
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .hero-slider-advanced{
+      position:relative;
+      width:100%;
+      max-width:500px;
+      height:420px;
+      overflow:hidden;
+      border-radius:30px;
+      background:rgba(255,255,255,.7);
+      border:1px solid rgba(255,255,255,.85);
+      box-shadow:0 20px 50px rgba(15,23,42,.16);
+    }
+
+    .hero-slide{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      opacity:0;
+      transform:scale(1.05);
+      transition:opacity .9s ease, transform 1.2s ease;
+    }
+
+    .hero-slide.active{
+      opacity:1;
+      transform:scale(1);
+    }
+
+    .hero-slider-advanced::after{
+      content:"";
+      position:absolute;
+      inset:auto 0 0 0;
+      height:120px;
+      background:linear-gradient(to top, rgba(15,23,42,.28), transparent);
+      pointer-events:none;
+    }
+
+    .hero-nav{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      width:44px;
+      height:44px;
+      border:none;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:rgba(255,255,255,.86);
+      color:#0f172a;
+      box-shadow:0 10px 22px rgba(15,23,42,.14);
+      z-index:3;
+      transition:.2s ease;
+    }
+
+    .hero-nav:hover{
+      background:#fff;
+      transform:translateY(-50%) scale(1.05);
+    }
+
+    .hero-prev{ left:14px; }
+    .hero-next{ right:14px; }
+
+    .hero-dots{
+      position:absolute;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      z-index:3;
+    }
+
+    .hero-dot{
+      width:11px;
+      height:11px;
+      border:none;
+      border-radius:50%;
+      background:rgba(255,255,255,.58);
+      transition:.25s ease;
+    }
+
+    .hero-dot.active{
+      width:28px;
+      border-radius:999px;
+      background:#fff;
+    }
+
+    .bh-section{
+      position:relative;
+      z-index:1;
+      padding:22px 0 10px;
+    }
+
+    .bh-section-head{
+      text-align:center;
+      margin-bottom:24px;
+    }
+
+    .bh-section-title{
+      font-size:2rem;
+      font-weight:900;
+      margin-bottom:8px;
+    }
+
+    .bh-section-sub{
+      color:var(--bh-muted);
+      max-width:640px;
+      margin:0 auto;
+    }
+
+    .bh-cat-card,
+    .bh-feature-card,
+    .bh-book-item{
+      background:rgba(255,255,255,.88);
+      backdrop-filter:blur(10px);
+      border:1px solid rgba(255,255,255,.9);
+      border-radius:24px;
+      box-shadow:var(--bh-shadow2);
+      height:100%;
+      transition:transform .25s ease, box-shadow .25s ease;
+    }
+
+    .bh-cat-card:hover,
+    .bh-feature-card:hover,
+    .bh-book-item:hover{
+      transform:translateY(-8px);
+      box-shadow:0 18px 40px rgba(37,99,235,.16);
+    }
+
+    .bh-cat-card{
+      padding:24px;
+      text-decoration:none;
+      color:inherit;
+      display:block;
+      text-align:center;
+    }
+
+    .bh-cat-icon,
+    .bh-feature-icon{
+      width:66px;
+      height:66px;
+      border-radius:20px;
+      display:grid;
+      place-items:center;
+      margin:0 auto 16px;
+      background:linear-gradient(135deg,#eff6ff,#dbeafe);
+      color:var(--bh-primary);
+      font-size:1.5rem;
+    }
+
+    .bh-cat-title,
+    .bh-feature-title{
+      font-size:1.12rem;
+      font-weight:900;
+      margin-bottom:8px;
+    }
+
+    .bh-cat-text,
+    .bh-feature-text{
+      color:var(--bh-muted);
+      line-height:1.65;
+      margin:0;
+      font-size:.95rem;
+    }
+
+    .bh-feature-card{
+      padding:24px;
+      text-align:center;
+    }
+
+    .bh-book-item{
+      padding:16px;
+      overflow:hidden;
+    }
+
+    .bh-book-cover{
+      width:100%;
+      height:250px;
+      object-fit:cover;
+      border-radius:18px;
+      border:1px solid #edf2f7;
+      background:#fff;
+    }
+
+    .bh-book-tag{
+      display:inline-flex;
+      align-items:center;
+      border-radius:999px;
+      padding:6px 10px;
+      background:#eef4ff;
+      color:#2563eb;
+      font-size:.78rem;
+      font-weight:900;
+      margin-top:14px;
+      margin-bottom:10px;
+    }
+
+    .bh-book-title{
+      font-size:1.08rem;
+      font-weight:900;
+      margin-bottom:6px;
+      line-height:1.4;
+      color:#111827;
+    }
+
+    .bh-book-author{
+      color:var(--bh-muted);
+      font-size:.92rem;
+      margin-bottom:10px;
+    }
+
+    .bh-book-price{
+      font-size:1.12rem;
+      font-weight:900;
+      color:#2563eb;
+      margin-bottom:14px;
+    }
+
+    .bh-book-actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .bh-mini-btn{
+      min-height:44px;
+      border-radius:14px;
+      font-weight:900;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      text-decoration:none;
+    }
+
+    .bh-mini-btn.primary{
+      background:#2563eb;
+      color:#fff;
+      border:none;
+    }
+
+    .bh-mini-btn.outline{
+      background:#fff;
+      color:#0f172a;
+      border:1px solid #dbe3ef;
+    }
+
+    .bh-cta{
+      margin-top:20px;
+    }
+
+    .bh-cta-card{
+      background:linear-gradient(135deg,#0f172a,#1d4ed8,#0ea5e9);
+      color:#fff;
+      border-radius:34px;
+      padding:34px;
+      box-shadow:0 20px 50px rgba(15,23,42,.18);
+      text-align:center;
+    }
+
+    .bh-cta-card h2{
+      font-size:2rem;
+      font-weight:900;
+      margin-bottom:10px;
+    }
+
+    .bh-cta-card p{
+      color:rgba(255,255,255,.85);
+      max-width:700px;
+      margin:0 auto 20px;
+      line-height:1.7;
+    }
+
+    @media (max-width:991px){
+      .bh-hero-surface{
+        padding:24px;
+      }
+
+      .bh-hero-stats{
+        grid-template-columns:1fr;
+      }
+
+      .hero-slider-advanced{
+        max-width:100%;
+        height:360px;
+        margin-top:8px;
+      }
+    }
+
+    @media (max-width:767px){
+      .bh-hero-title{
+        font-size:2.2rem;
+      }
+
+      .hero-slider-advanced{
+        height:300px;
+        border-radius:24px;
+      }
+
+      .hero-nav{
+        width:40px;
+        height:40px;
+      }
+
+      .bh-book-actions{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+<body class="bh-body">
+  <%- include('partials/navbar') %>
+
+  <div class="bh-page">
+    <div class="bh-floating-shapes">
+      <span class="bh-shape s1"></span>
+      <span class="bh-shape s2"></span>
+      <span class="bh-shape s3"></span>
+    </div>
+
+    <section class="bh-hero">
+      <div class="container">
+        <div class="bh-hero-surface">
+          <div class="row align-items-center g-4">
+            <div class="col-lg-7">
+              <div class="bh-hero-badge">
+                <i class="bi bi-stars"></i> Premium Book Shopping Experience
+              </div>
+
+              <h1 class="bh-hero-title">
+                Discover Your Next <span>Favorite Book</span>
+              </h1>
+
+              <p class="bh-hero-sub">
+                Explore programming, DBMS, fiction, self-help, and many more titles with a smoother UI, wishlist, reviews, invoice downloads, profile system, and order tracking.
+              </p>
+
+              <div class="bh-hero-actions">
+                <a href="/books" class="bh-btn bh-btn-primary">
+                  <i class="bi bi-book"></i> Browse Books
+                </a>
+
+                <a href="/cart" class="bh-btn bh-btn-outline">
+                  <i class="bi bi-cart3"></i> View Cart
+                </a>
+              </div>
+
+              <div class="bh-hero-stats">
+                <div class="bh-stat">
+                  <div class="bh-stat-num">500+</div>
+                  <div class="bh-stat-text">Books across multiple categories</div>
+                </div>
+                <div class="bh-stat">
+                  <div class="bh-stat-num">Fast</div>
+                  <div class="bh-stat-text">Smooth cart, order and checkout flow</div>
+                </div>
+                <div class="bh-stat">
+                  <div class="bh-stat-num">24/7</div>
+                  <div class="bh-stat-text">Browse anytime on desktop and mobile</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-5">
+              <div class="bh-hero-visual">
+                <div class="hero-slider-advanced" id="heroSlider">
+                  <img src="/images/hero1.jpg" class="hero-slide active" alt="Book 1">
+                  <img src="/images/hero2.jpg" class="hero-slide" alt="Book 2">
+                  <img src="/images/hero3.jpg" class="hero-slide" alt="Book 3">
+
+                  <button type="button" class="hero-nav hero-prev" id="heroPrev">
+                    <i class="bi bi-chevron-left"></i>
+                  </button>
+
+                  <button type="button" class="hero-nav hero-next" id="heroNext">
+                    <i class="bi bi-chevron-right"></i>
+                  </button>
+
+                  <div class="hero-dots" id="heroDots">
+                    <button type="button" class="hero-dot active" data-index="0"></button>
+                    <button type="button" class="hero-dot" data-index="1"></button>
+                    <button type="button" class="hero-dot" data-index="2"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bh-section">
+      <div class="container">
+        <div class="bh-section-head">
+          <div class="bh-section-title">Browse Categories</div>
+          <p class="bh-section-sub">
+            Quickly explore books from your favorite category.
+          </p>
+        </div>
+
+        <div class="row g-4">
+          <% categories.forEach((cat) => { %>
+            <div class="col-md-6 col-lg-3">
+              <a href="/books?category=<%= encodeURIComponent(cat.name) %>" class="bh-cat-card">
+                <div class="bh-cat-icon">
+                  <i class="bi bi-book-half"></i>
+                </div>
+                <div class="bh-cat-title"><%= cat.name %></div>
+                <p class="bh-cat-text">Explore premium books from this category.</p>
+              </a>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    </section>
+
+    <section class="bh-section">
+      <div class="container">
+        <div class="bh-section-head">
+          <div class="bh-section-title">Featured Books</div>
+          <p class="bh-section-sub">
+            Handpicked titles to start your next reading journey.
+          </p>
+        </div>
+
+        <div class="row g-4">
+          <% featuredBooks.forEach((b) => { 
+            const finalPrice = Math.max(0, Number(b.price || 0) - Math.round((Number(b.price || 0) * Number(b.discount || 0)) / 100));
+          %>
+            <div class="col-md-6 col-lg-3">
+              <div class="bh-book-item">
+                <img
+                  src="<%= b.image || '/uploads/default.png' %>"
+                  alt="<%= b.name %>"
+                  class="bh-book-cover"
+                  onerror="this.onerror=null;this.src='/uploads/default.png'"
+                >
+
+                <div class="bh-book-tag"><%= b.category_name || 'Book' %></div>
+                <div class="bh-book-title"><%= b.name %></div>
+                <div class="bh-book-author"><i class="bi bi-person"></i> <%= b.author %></div>
+                <div class="bh-book-price">₹<%= finalPrice %></div>
+
+                <div class="bh-book-actions">
+                  <a href="/books/<%= b.id %>" class="bh-mini-btn outline">
+                    <i class="bi bi-eye"></i> View
+                  </a>
+                  <a href="/cart/add/<%= b.id %>" class="bh-mini-btn primary">
+                    <i class="bi bi-cart-plus"></i> Add
+                  </a>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    </section>
+
+    <section class="bh-section">
+      <div class="container">
+        <div class="bh-section-head">
+          <div class="bh-section-title">Why Choose BookHub</div>
+          <p class="bh-section-sub">
+            More than just a bookstore — a complete premium reading platform.
+          </p>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-md-6 col-lg-3">
+            <div class="bh-feature-card">
+              <div class="bh-feature-icon"><i class="bi bi-collection"></i></div>
+              <div class="bh-feature-title">Huge Collection</div>
+              <p class="bh-feature-text">Browse books across programming, fiction, self-help and academic categories.</p>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-3">
+            <div class="bh-feature-card">
+              <div class="bh-feature-icon"><i class="bi bi-heart"></i></div>
+              <div class="bh-feature-title">Wishlist</div>
+              <p class="bh-feature-text">Save books you love and revisit them anytime from your wishlist page.</p>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-3">
+            <div class="bh-feature-card">
+              <div class="bh-feature-icon"><i class="bi bi-star"></i></div>
+              <div class="bh-feature-title">Reviews & Ratings</div>
+              <p class="bh-feature-text">Read and post user reviews to make smarter book buying decisions.</p>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-3">
+            <div class="bh-feature-card">
+              <div class="bh-feature-icon"><i class="bi bi-truck"></i></div>
+              <div class="bh-feature-title">Order Tracking</div>
+              <p class="bh-feature-text">Track placed, paid, shipped and delivered orders from your account.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bh-section bh-cta">
+      <div class="container">
+        <div class="bh-cta-card">
+          <h2>Start Your Reading Journey Today</h2>
+          <p>
+            Explore books, add favorites to wishlist, place orders, download invoices, and enjoy a complete bookstore experience with BookHub.
+          </p>
+          <a href="/books" class="bh-btn bh-btn-outline" style="background:#fff;color:#0f172a;border:none;">
+            <i class="bi bi-arrow-right-circle"></i> Explore All Books
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <%- include('partials/footer') %>
+
+  <script>
+    (() => {
+      const slides = document.querySelectorAll(".hero-slide");
+      const dots = document.querySelectorAll(".hero-dot");
+      const prev = document.getElementById("heroPrev");
+      const next = document.getElementById("heroNext");
+
+      let current = 0;
+      let auto;
+
+      function showSlide(index) {
+        slides.forEach((slide, i) => {
+          slide.classList.toggle("active", i === index);
+        });
+
+        dots.forEach((dot, i) => {
+          dot.classList.toggle("active", i === index);
+        });
+
+        current = index;
+      }
+
+      function nextSlide() {
+        showSlide((current + 1) % slides.length);
+      }
+
+      function prevSlide() {
+        showSlide((current - 1 + slides.length) % slides.length);
+      }
+
+      function startAuto() {
+        auto = setInterval(nextSlide, 3500);
+      }
+
+      function stopAuto() {
+        clearInterval(auto);
+      }
+
+      next?.addEventListener("click", () => {
+        stopAuto();
+        nextSlide();
+        startAuto();
+      });
+
+      prev?.addEventListener("click", () => {
+        stopAuto();
+        prevSlide();
+        startAuto();
+      });
+
+      dots.forEach((dot) => {
+        dot.addEventListener("click", () => {
+          stopAuto();
+          showSlide(Number(dot.dataset.index));
+          startAuto();
+        });
+      });
+
+      startAuto();
+    })();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

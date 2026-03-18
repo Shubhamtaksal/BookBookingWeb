@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Create Account • BookHub</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+<style>
+
+:root{
+--bg1:#0f172a;
+--bg2:#2563eb;
+--bg3:#0ea5e9;
+--card:rgba(255,255,255,.95);
+--shadow:0 30px 70px rgba(0,0,0,.25);
+--border:#dbe7fb;
+--primary:#2563eb;
+--muted:#64748b;
+}
+
+body{
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:20px;
+font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+
+background:
+radial-gradient(circle at 20% 20%, rgba(255,255,255,.10), transparent 18%),
+radial-gradient(circle at 90% 10%, rgba(255,255,255,.10), transparent 18%),
+linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+}
+
+.register-box{
+width:100%;
+max-width:460px;
+background:var(--card);
+border-radius:28px;
+padding:34px;
+box-shadow:var(--shadow);
+position:relative;
+overflow:hidden;
+}
+
+.register-box::before{
+content:"";
+position:absolute;
+width:220px;
+height:220px;
+right:-80px;
+top:-80px;
+background:radial-gradient(circle, rgba(37,99,235,.25), transparent 70%);
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:12px;
+margin-bottom:24px;
+}
+
+.brand-icon{
+width:50px;
+height:50px;
+display:grid;
+place-items:center;
+border-radius:16px;
+background:linear-gradient(135deg,#0f172a,#2563eb);
+color:#fff;
+font-size:1.3rem;
+}
+
+.brand-title{
+font-size:1.3rem;
+font-weight:900;
+}
+
+.brand-sub{
+font-size:.9rem;
+color:var(--muted);
+}
+
+.title{
+font-size:1.9rem;
+font-weight:900;
+margin-bottom:8px;
+}
+
+.subtitle{
+color:var(--muted);
+margin-bottom:22px;
+font-size:.95rem;
+}
+
+.input-label{
+font-weight:800;
+margin-bottom:6px;
+}
+
+.input-wrap{
+position:relative;
+margin-bottom:14px;
+}
+
+.input-icon{
+position:absolute;
+left:14px;
+top:50%;
+transform:translateY(-50%);
+color:#64748b;
+}
+
+.soft-input{
+height:54px;
+padding-left:44px;
+border-radius:14px;
+border:1px solid var(--border);
+font-weight:600;
+}
+
+.soft-input:focus{
+border-color:#60a5fa;
+box-shadow:0 0 0 .2rem rgba(37,99,235,.08);
+}
+
+.register-btn{
+width:100%;
+height:56px;
+border:none;
+border-radius:16px;
+background:linear-gradient(135deg,#0f172a,#2563eb);
+color:#fff;
+font-weight:900;
+margin-top:10px;
+box-shadow:0 18px 30px rgba(37,99,235,.20);
+}
+
+.register-btn:hover{
+transform:translateY(-1px);
+}
+
+.footer{
+margin-top:16px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+gap:10px;
+}
+
+.footer a{
+font-weight:800;
+text-decoration:none;
+color:#2563eb;
+}
+
+.helper{
+font-size:.85rem;
+color:#334155;
+}
+
+.alert{
+border-radius:12px;
+font-weight:700;
+}
+
+</style>
+</head>
+<body>
+
+<div class="register-box">
+
+<div class="brand">
+<div class="brand-icon">
+<i class="bi bi-book-half"></i>
+</div>
+<div>
+<div class="brand-title">BookHub</div>
+<div class="brand-sub">Create your reader account</div>
+</div>
+</div>
+
+<div class="title">Create account</div>
+<div class="subtitle">Register to explore books, manage orders, and start your reading journey.</div>
+
+<% if(error){ %>
+<div class="alert alert-danger">
+<i class="bi bi-exclamation-triangle"></i> <%= error %>
+</div>
+<% } %>
+
+<form method="POST" action="/register">
+
+<label class="input-label">Full Name</label>
+<div class="input-wrap">
+<i class="bi bi-person input-icon"></i>
+<input type="text" name="fullname" class="form-control soft-input" placeholder="Enter your name" required>
+</div>
+
+<label class="input-label">Email Address</label>
+<div class="input-wrap">
+<i class="bi bi-envelope input-icon"></i>
+<input type="email" name="email" class="form-control soft-input" placeholder="Enter your email" required>
+</div>
+
+<label class="input-label">Password</label>
+<div class="input-wrap">
+<i class="bi bi-lock input-icon"></i>
+<input type="password" name="password" class="form-control soft-input" placeholder="Create password" required>
+</div>
+
+<button class="register-btn">
+<i class="bi bi-person-plus"></i> Create Account
+</button>
+
+</form>
+
+<div class="footer">
+<div class="helper">
+Already have account?
+</div>
+
+<a href="/login">Login here</a>
+</div>
+
+</div>
+
+</body>
+</html>

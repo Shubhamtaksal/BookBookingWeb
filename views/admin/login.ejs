@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Login • BookHub</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <style>
+    body{
+      min-height:100vh;
+      background: linear-gradient(135deg,#0f172a,#1e293b,#334155);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+    .admin-card{
+      width:100%;
+      max-width:430px;
+      background:#fff;
+      border-radius:22px;
+      box-shadow:0 20px 60px rgba(0,0,0,.25);
+      overflow:hidden;
+    }
+    .admin-top{
+      background:linear-gradient(135deg,#2563eb,#1d4ed8);
+      color:#fff;
+      padding:28px;
+      text-align:center;
+    }
+    .admin-top i{
+      font-size:42px;
+      display:block;
+      margin-bottom:10px;
+    }
+    .admin-body{
+      padding:28px;
+    }
+    .form-control{
+      height:48px;
+      border-radius:12px;
+    }
+    .input-group-text{
+      border-radius:12px 0 0 12px;
+    }
+    .btn-admin{
+      height:48px;
+      border-radius:12px;
+      font-weight:600;
+    }
+    .back-link{
+      text-decoration:none;
+      font-size:14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-card">
+    <div class="admin-top">
+      <i class="bi bi-shield-lock-fill"></i>
+      <h3 class="mb-1">Admin Login</h3>
+      <p class="mb-0 small">Sign in to access BookHub Admin Panel</p>
+    </div>
+
+    <div class="admin-body">
+      <div class="mb-3">
+        <a href="/" class="back-link">
+          <i class="bi bi-arrow-left"></i> Back to Home
+        </a>
+      </div>
+
+      <% if (typeof error !== "undefined" && error) { %>
+        <div class="alert alert-danger"><%= error %></div>
+      <% } %>
+
+      <form method="POST" action="/admin/login">
+        <div class="mb-3">
+          <label class="form-label">Admin Email</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+            <input type="email" name="email" class="form-control" placeholder="Enter admin email" required>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-key"></i></span>
+            <input id="adminPwd" type="password" name="password" class="form-control" placeholder="Enter password" required>
+            <button class="btn btn-outline-secondary" type="button" id="togglePwd">
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary w-100 btn-admin">
+          <i class="bi bi-box-arrow-in-right"></i> Login as Admin
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const btn = document.getElementById('togglePwd');
+    const pwd = document.getElementById('adminPwd');
+
+    btn?.addEventListener('click', () => {
+      const isPass = pwd.type === 'password';
+      pwd.type = isPass ? 'text' : 'password';
+      btn.innerHTML = isPass
+        ? '<i class="bi bi-eye-slash"></i>'
+        : '<i class="bi bi-eye"></i>';
+    });
+  </script>
+</body>
+</html>

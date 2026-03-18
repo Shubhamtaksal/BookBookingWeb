@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard • BookHub</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#0b1220;
+      --bg2:#101a2f;
+      --card:rgba(255,255,255,.08);
+      --card2:#ffffff;
+      --text:#eaf1ff;
+      --muted:#a9b6d3;
+      --line:rgba(255,255,255,.10);
+      --primary:#4f8cff;
+      --primary2:#7dd3fc;
+      --shadow:0 22px 60px rgba(0,0,0,.28);
+      --radius:28px;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(79,140,255,.18), transparent 20%),
+        radial-gradient(circle at 90% 20%, rgba(125,211,252,.12), transparent 18%),
+        radial-gradient(circle at 80% 80%, rgba(79,140,255,.10), transparent 20%),
+        linear-gradient(135deg,var(--bg) 0%, var(--bg2) 100%);
+    }
+
+    .page-wrap{
+      padding:28px 0 42px;
+    }
+
+    .glass{
+      background:var(--card);
+      border:1px solid var(--line);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      box-shadow:var(--shadow);
+      border-radius:var(--radius);
+    }
+
+    .hero{
+      padding:26px;
+      margin-bottom:22px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      width:280px;
+      height:280px;
+      right:-80px;
+      top:-80px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(79,140,255,.35), transparent 70%);
+      pointer-events:none;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      width:220px;
+      height:220px;
+      left:-70px;
+      bottom:-90px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(125,211,252,.20), transparent 70%);
+      pointer-events:none;
+    }
+
+    .hero-title{
+      font-size:2.25rem;
+      font-weight:900;
+      line-height:1.05;
+      margin-bottom:8px;
+      position:relative;
+      z-index:1;
+    }
+
+    .hero-sub{
+      color:var(--muted);
+      margin-bottom:0;
+      max-width:520px;
+      position:relative;
+      z-index:1;
+    }
+
+    .top-actions{
+      position:relative;
+      z-index:1;
+    }
+
+    .top-actions .btn{
+      border-radius:14px;
+      font-weight:800;
+      padding:10px 16px;
+      border:none;
+    }
+
+    .btn-lightx{
+      background:#fff;
+      color:#0f172a;
+    }
+
+    .btn-lightx:hover{
+      background:#eef4ff;
+      color:#0f172a;
+    }
+
+    .btn-glass{
+      background:rgba(255,255,255,.10);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.16) !important;
+    }
+
+    .btn-glass:hover{
+      background:rgba(255,255,255,.16);
+      color:#fff;
+    }
+
+    .stat-card{
+      padding:22px;
+      height:100%;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .stat-card::before{
+      content:"";
+      position:absolute;
+      width:120px;
+      height:120px;
+      right:-26px;
+      top:-26px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,255,255,.08), transparent 70%);
+    }
+
+    .stat-icon{
+      width:54px;
+      height:54px;
+      display:grid;
+      place-items:center;
+      border-radius:18px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.10);
+      font-size:1.25rem;
+      margin-bottom:16px;
+      position:relative;
+      z-index:1;
+    }
+
+    .stat-label{
+      color:var(--muted);
+      font-weight:700;
+      margin-bottom:8px;
+      position:relative;
+      z-index:1;
+    }
+
+    .stat-value{
+      font-size:2.2rem;
+      font-weight:900;
+      line-height:1;
+      position:relative;
+      z-index:1;
+    }
+
+    .action-card{
+      padding:20px;
+      height:100%;
+      text-decoration:none;
+      color:var(--text);
+      display:block;
+      transition:.18s ease;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .action-card:hover{
+      transform:translateY(-3px);
+      color:#fff;
+      border-color:rgba(255,255,255,.18);
+    }
+
+    .action-icon{
+      width:52px;
+      height:52px;
+      display:grid;
+      place-items:center;
+      border-radius:18px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.10);
+      font-size:1.2rem;
+      margin-bottom:14px;
+    }
+
+    .action-title{
+      font-size:1.05rem;
+      font-weight:900;
+      margin-bottom:4px;
+    }
+
+    .action-sub{
+      color:var(--muted);
+      font-size:.9rem;
+      margin-bottom:0;
+    }
+
+    .mini-bar{
+      height:6px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      overflow:hidden;
+      margin-top:14px;
+    }
+
+    .mini-fill{
+      height:100%;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--primary),var(--primary2));
+    }
+
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:16px;
+      gap:12px;
+    }
+
+    .section-title{
+      font-size:1.2rem;
+      font-weight:900;
+      margin:0;
+    }
+
+    .floating-label{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--muted);
+      font-size:.82rem;
+      font-weight:700;
+    }
+
+    @media (max-width: 768px){
+      .hero-title{ font-size:1.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container page-wrap">
+
+    <div class="glass hero">
+      <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+        <div>
+          <div class="hero-title">BookHub Admin</div>
+          <p class="hero-sub">Smart control panel for books, orders, and categories.</p>
+        </div>
+
+        <div class="top-actions d-flex gap-2 flex-wrap">
+          <a href="/admin/books" class="btn btn-lightx">
+            <i class="bi bi-book"></i> Books
+          </a>
+          <a href="/admin/orders" class="btn btn-glass">
+            <i class="bi bi-bag-check"></i> Orders
+          </a>
+          <a href="/admin/categories" class="btn btn-glass">
+            <i class="bi bi-grid"></i> Categories
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+      <div class="col-md-4">
+        <div class="glass stat-card">
+          <div class="stat-icon"><i class="bi bi-people"></i></div>
+          <div class="stat-label">Users</div>
+          <div class="stat-value"><%= usersCount %></div>
+          <div class="mini-bar"><div class="mini-fill" style="width:72%"></div></div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="glass stat-card">
+          <div class="stat-icon"><i class="bi bi-book-half"></i></div>
+          <div class="stat-label">Books</div>
+          <div class="stat-value"><%= booksCount %></div>
+          <div class="mini-bar"><div class="mini-fill" style="width:88%"></div></div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="glass stat-card">
+          <div class="stat-icon"><i class="bi bi-receipt"></i></div>
+          <div class="stat-label">Orders</div>
+          <div class="stat-value"><%= ordersCount %></div>
+          <div class="mini-bar"><div class="mini-fill" style="width:64%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <h3 class="section-title">Quick Access</h3>
+      <div class="floating-label"><i class="bi bi-stars"></i> Premium Panel</div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6 col-xl-3">
+        <a href="/admin/books/new" class="glass action-card">
+          <div class="action-icon"><i class="bi bi-plus-circle"></i></div>
+          <div class="action-title">Add Book</div>
+          <p class="action-sub">Create new book entry</p>
+        </a>
+      </div>
+
+      <div class="col-md-6 col-xl-3">
+        <a href="/admin/books" class="glass action-card">
+          <div class="action-icon"><i class="bi bi-pencil-square"></i></div>
+          <div class="action-title">Manage Books</div>
+          <p class="action-sub">Edit or delete inventory</p>
+        </a>
+      </div>
+
+      <div class="col-md-6 col-xl-3">
+        <a href="/admin/orders" class="glass action-card">
+          <div class="action-icon"><i class="bi bi-truck"></i></div>
+          <div class="action-title">Track Orders</div>
+          <p class="action-sub">Update order status</p>
+        </a>
+      </div>
+
+      <div class="col-md-6 col-xl-3">
+        <a href="/admin/categories" class="glass action-card">
+          <div class="action-icon"><i class="bi bi-collection"></i></div>
+          <div class="action-title">Categories</div>
+          <p class="action-sub">Organize bookstore shelves</p>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

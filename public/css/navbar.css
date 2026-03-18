@@ -1,0 +1,67 @@
+.bh-navbar-wrap{
+  background:#fff;
+  border-bottom:1px solid #e6ecf5;
+  position:sticky;
+  top:0;
+  z-index:999;
+}
+
+.bh-navbar{
+  padding:12px 0;
+}
+
+.bh-brand{
+  font-weight:900;
+  font-size:1.2rem;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#0f172a;
+}
+
+.bh-nav-links .nav-link{
+  font-weight:700;
+  color:#334155;
+  margin:0 8px;
+}
+
+.bh-nav-links .nav-link:hover{
+  color:#2563eb;
+}
+
+.bh-outline-btn{
+  border:1px solid #dbe7fb;
+  border-radius:12px;
+  font-weight:700;
+}
+
+.bh-primary-btn{
+  background:#2563eb;
+  color:#fff;
+  border-radius:12px;
+  font-weight:700;
+}
+
+.bh-cart-btn{
+  background:#0f172a;
+  color:#fff;
+  border-radius:12px;
+  font-weight:700;
+}
+
+.bh-user-btn{
+  background:#f1f5f9;
+  border-radius:12px;
+  font-weight:700;
+}
+
+.bh-cart-badge{
+  position:absolute;
+  top:-6px;
+  right:-6px;
+  background:red;
+  color:#fff;
+  font-size:10px;
+  padding:3px 6px;
+  border-radius:50%;
+}

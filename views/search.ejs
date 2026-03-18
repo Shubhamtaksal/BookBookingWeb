@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Search • BookHub</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/css/navbar.css">
+<link rel="stylesheet" href="/css/common-footer.css">
+
+<style>
+body{
+  background:linear-gradient(180deg,#f8fbff,#eef4ff);
+}
+
+.book-card{
+  background:#fff;
+  border-radius:18px;
+  padding:16px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+  transition:.3s;
+}
+
+.book-card:hover{
+  transform:translateY(-5px);
+}
+
+.book-img{
+  height:180px;
+  object-fit:cover;
+  border-radius:12px;
+}
+
+.book-title{
+  font-weight:900;
+}
+
+</style>
+</head>
+
+<body>
+
+<%- include('partials/navbar') %>
+
+<div class="container mt-4">
+
+<h3 class="mb-4">Search Results for "<%= q %>"</h3>
+
+<div class="row g-4">
+
+<% if(!books.length){ %>
+  <h5>No books found 😢</h5>
+<% } %>
+
+<% books.forEach(b => { %>
+<div class="col-md-3">
+  <div class="book-card">
+
+    <img src="<%= b.image %>" class="w-100 book-img">
+
+    <div class="mt-2 book-title"><%= b.name %></div>
+    <div><%= b.author %></div>
+
+    <div class="fw-bold text-primary mt-2">₹<%= b.price %></div>
+
+    <a href="/books/<%= b.id %>" class="btn btn-dark w-100 mt-2">
+      View Details
+    </a>
+
+  </div>
+</div>
+<% }) %>
+
+</div>
+</div>
+
+<%- include('partials/footer') %>
+
+</body>
+</html>

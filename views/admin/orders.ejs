@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manage Orders • Admin</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/navbar.css">
+
+  <style>
+    :root{
+      --bg:#f6f9ff;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --line:#e7edf7;
+      --primary:#2563eb;
+      --shadow:0 18px 45px rgba(15,23,42,.08);
+      --radius:24px;
+    }
+
+    body{
+      background:
+        radial-gradient(circle at top left, rgba(37,99,235,.08), transparent 22%),
+        linear-gradient(180deg,#f8fbff,#eef4ff);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    }
+
+    .page-wrap{
+      padding:28px 0 48px;
+    }
+
+    .hero-card,
+    .table-card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+    }
+
+    .hero-card{
+      padding:24px;
+      margin-bottom:20px;
+    }
+
+    .hero-title{
+      font-size:2rem;
+      font-weight:900;
+      margin-bottom:6px;
+    }
+
+    .hero-sub{
+      color:var(--muted);
+      margin-bottom:0;
+    }
+
+    .hero-actions .btn{
+      border-radius:14px;
+      font-weight:800;
+      padding:10px 14px;
+    }
+
+    .table-card{
+      padding:18px;
+    }
+
+    .table > :not(caption) > * > *{
+      padding:16px 12px;
+      vertical-align:middle;
+      border-bottom-color:#edf2f9;
+    }
+
+    .order-id{
+      font-weight:900;
+      color:#111827;
+    }
+
+    .customer-name{
+      font-weight:800;
+      color:#111827;
+    }
+
+    .customer-email{
+      color:var(--muted);
+      font-size:.9rem;
+      margin-top:2px;
+    }
+
+    .amount{
+      font-weight:900;
+      color:#111827;
+    }
+
+    .status-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      padding:7px 12px;
+      font-size:.78rem;
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    .st-placed{background:#dbeafe;color:#1d4ed8;}
+    .st-paid{background:#dcfce7;color:#166534;}
+    .st-shipped{background:#ede9fe;color:#6d28d9;}
+    .st-out{background:#fef3c7;color:#b45309;}
+    .st-delivered{background:#dcfce7;color:#166534;}
+    .st-cancelled{background:#fee2e2;color:#b91c1c;}
+
+    .status-select{
+      min-width:180px;
+      border-radius:12px;
+      font-weight:700;
+    }
+
+    .mini-btn{
+      border-radius:12px;
+      font-weight:800;
+      padding:8px 12px;
+      white-space:nowrap;
+    }
+
+    @media (max-width: 767px){
+      .hero-title{font-size:1.6rem;}
+      .status-select{min-width:140px;}
+    }
+  </style>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="container page-wrap">
+    <div class="hero-card d-flex justify-content-between align-items-center flex-wrap gap-3">
+      <div>
+        <div class="hero-title">Manage Orders</div>
+        <p class="hero-sub">Track all customer orders and update delivery status from one premium dashboard.</p>
+      </div>
+
+      <div class="hero-actions d-flex gap-2 flex-wrap">
+        <a href="/admin" class="btn btn-outline-secondary">
+          <i class="bi bi-arrow-left"></i> Dashboard
+        </a>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Order</th>
+              <th>Customer</th>
+              <th>Total</th>
+              <th>Payment</th>
+              <th>Status</th>
+              <th>Update</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% orders.forEach((o) => { %>
+              <tr>
+                <td>
+                  <div class="order-id">#<%= o.id %></div>
+                  <div class="text-muted small"><%= new Date(o.created_at).toLocaleString() %></div>
+                </td>
+
+                <td>
+                  <div class="customer-name"><%= o.fullname %></div>
+                  <div class="customer-email"><%= o.email %></div>
+                </td>
+
+                <td class="amount">₹<%= o.total %></td>
+
+                <td>
+                  <span class="fw-bold"><%= o.payment_method || 'COD' %></span>
+                </td>
+
+                <td>
+                  <% if (o.status === 'PLACED') { %>
+                    <span class="status-badge st-placed">PLACED</span>
+                  <% } else if (o.status === 'PAID') { %>
+                    <span class="status-badge st-paid">PAID</span>
+                  <% } else if (o.status === 'SHIPPED') { %>
+                    <span class="status-badge st-shipped">SHIPPED</span>
+                  <% } else if (o.status === 'OUT_FOR_DELIVERY') { %>
+                    <span class="status-badge st-out">OUT FOR DELIVERY</span>
+                  <% } else if (o.status === 'DELIVERED') { %>
+                    <span class="status-badge st-delivered">DELIVERED</span>
+                  <% } else { %>
+                    <span class="status-badge st-cancelled">CANCELLED</span>
+                  <% } %>
+                </td>
+
+                <td>
+                  <form action="/admin/orders/<%= o.id %>/status" method="POST">
+                    <select name="status" class="form-select form-select-sm status-select" onchange="this.form.submit()">
+                      <option value="PLACED" <%= o.status==='PLACED' ? 'selected' : '' %>>Placed</option>
+                      <option value="PAID" <%= o.status==='PAID' ? 'selected' : '' %>>Paid</option>
+                      <option value="SHIPPED" <%= o.status==='SHIPPED' ? 'selected' : '' %>>Shipped</option>
+                      <option value="OUT_FOR_DELIVERY" <%= o.status==='OUT_FOR_DELIVERY' ? 'selected' : '' %>>Out for Delivery</option>
+                      <option value="DELIVERED" <%= o.status==='DELIVERED' ? 'selected' : '' %>>Delivered</option>
+                      <option value="CANCELLED" <%= o.status==='CANCELLED' ? 'selected' : '' %>>Cancelled</option>
+                    </select>
+                  </form>
+                </td>
+
+                <td>
+                  <a href="/admin/orders/<%= o.id %>" class="btn btn-outline-primary mini-btn">
+                    <i class="bi bi-eye"></i> View
+                  </a>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

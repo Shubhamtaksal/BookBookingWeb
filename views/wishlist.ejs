@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wishlist • BookHub</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/navbar.css">
+  <link rel="stylesheet" href="/css/common-footer.css">
+
+  <style>
+    :root{
+      --bh-text:#0f172a;
+      --bh-muted:#64748b;
+      --bh-border:#e6eaf2;
+      --bh-primary:#2563eb;
+      --bh-danger:#ef4444;
+      --bh-shadow:0 18px 45px rgba(15,23,42,.10);
+      --bh-shadow2:0 10px 28px rgba(15,23,42,.08);
+      --bh-radius:24px;
+      --bh-radius2:30px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{overflow-x:hidden}
+
+    body{
+      background:
+        radial-gradient(circle at top left, rgba(37,99,235,.10), transparent 22%),
+        radial-gradient(circle at top right, rgba(14,165,233,.08), transparent 18%),
+        linear-gradient(180deg,#f8fbff,#eef4ff);
+      color:var(--bh-text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    }
+
+    .page-wrap{
+      padding:26px 0 48px;
+      position:relative;
+      z-index:1;
+    }
+
+    .floating-shapes{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+      z-index:0;
+    }
+
+    .shape{
+      position:absolute;
+      border-radius:50%;
+      filter:blur(10px);
+      opacity:.22;
+      animation:floatShape 12s ease-in-out infinite;
+    }
+
+    .shape.s1{
+      width:180px;height:180px;
+      background:rgba(37,99,235,.18);
+      left:-40px;top:120px;
+    }
+
+    .shape.s2{
+      width:220px;height:220px;
+      background:rgba(14,165,233,.15);
+      right:-60px;top:180px;
+      animation-delay:2s;
+    }
+
+    .shape.s3{
+      width:140px;height:140px;
+      background:rgba(37,99,235,.12);
+      left:20%;bottom:80px;
+      animation-delay:4s;
+    }
+
+    @keyframes floatShape{
+      0%,100%{transform:translateY(0) translateX(0)}
+      50%{transform:translateY(-16px) translateX(8px)}
+    }
+
+    .hero-card,
+    .wish-card,
+    .empty-card{
+      background:linear-gradient(135deg, rgba(255,255,255,.96), rgba(255,255,255,.90));
+      border:1px solid rgba(255,255,255,.78);
+      border-radius:var(--bh-radius2);
+      box-shadow:var(--bh-shadow);
+    }
+
+    .hero-card{
+      padding:24px;
+      margin-bottom:22px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero-card::before{
+      content:"";
+      position:absolute;
+      width:280px;
+      height:280px;
+      right:-90px;
+      top:-90px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(239,68,68,.12), transparent 65%);
+    }
+
+    .hero-title{
+      font-size:2rem;
+      font-weight:900;
+      line-height:1.1;
+      margin-bottom:6px;
+    }
+
+    .hero-sub{
+      color:var(--bh-muted);
+      margin-bottom:0;
+    }
+
+    .wish-card{
+      padding:22px;
+    }
+
+    .wish-item{
+      display:grid;
+      grid-template-columns:92px 1fr auto;
+      gap:16px;
+      align-items:start;
+      padding:16px;
+      border:1px solid var(--bh-border);
+      border-radius:22px;
+      background:#fff;
+      box-shadow:var(--bh-shadow2);
+      margin-bottom:14px;
+      transition:transform .22s ease, box-shadow .22s ease;
+    }
+
+    .wish-item:hover{
+      transform:translateY(-3px);
+      box-shadow:0 16px 30px rgba(15,23,42,.10);
+    }
+
+    .wish-item:last-child{
+      margin-bottom:0;
+    }
+
+    .wish-img-wrap{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:linear-gradient(180deg,#f8fbff,#ffffff);
+      border:1px solid var(--bh-border);
+      border-radius:18px;
+      padding:8px;
+      min-height:120px;
+    }
+
+    .wish-img{
+      width:72px;
+      height:98px;
+      object-fit:cover;
+      border-radius:12px;
+      background:#fff;
+      border:1px solid rgba(0,0,0,.05);
+      box-shadow:0 10px 20px rgba(15,23,42,.10);
+    }
+
+    .wish-cat{
+      color:var(--bh-primary);
+      font-size:.8rem;
+      font-weight:800;
+      margin-bottom:4px;
+    }
+
+    .wish-title{
+      font-size:1.03rem;
+      font-weight:900;
+      margin-bottom:4px;
+      line-height:1.35;
+      color:#111827;
+    }
+
+    .wish-author{
+      color:var(--bh-muted);
+      font-size:.92rem;
+      margin-bottom:8px;
+    }
+
+    .wish-meta{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      color:#334155;
+      font-size:.84rem;
+      font-weight:700;
+      margin-bottom:10px;
+    }
+
+    .wish-price{
+      font-size:1.15rem;
+      font-weight:900;
+      color:var(--bh-primary);
+    }
+
+    .action-wrap{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .action-btn{
+      min-height:42px;
+      border-radius:14px;
+      font-weight:900;
+      padding:0 14px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      text-decoration:none;
+      white-space:nowrap;
+    }
+
+    .btn-view{
+      background:#fff;
+      color:#0f172a;
+      border:1px solid #dbe3ef;
+    }
+
+    .btn-cart{
+      background:#2563eb;
+      color:#fff;
+      border:none;
+    }
+
+    .btn-cart:hover{
+      color:#fff;
+    }
+
+    .btn-remove{
+      background:#fff;
+      color:var(--bh-danger);
+      border:1px solid #fecaca;
+    }
+
+    .empty-card{
+      padding:42px 24px;
+      text-align:center;
+    }
+
+    .empty-icon{
+      width:84px;
+      height:84px;
+      margin:0 auto 16px;
+      border-radius:24px;
+      display:grid;
+      place-items:center;
+      background:#fff1f2;
+      color:#ef4444;
+      font-size:2rem;
+      border:1px solid #fecdd3;
+    }
+
+    .empty-title{
+      font-size:1.5rem;
+      font-weight:900;
+      margin-bottom:8px;
+    }
+
+    .empty-sub{
+      color:var(--bh-muted);
+      margin-bottom:18px;
+    }
+
+    .browse-btn{
+      min-height:48px;
+      border-radius:14px;
+      font-weight:900;
+      padding:0 18px;
+    }
+
+    @media (max-width: 991px){
+      .wish-item{
+        grid-template-columns:92px 1fr;
+      }
+
+      .action-wrap{
+        grid-column:1 / -1;
+        justify-content:flex-start;
+      }
+    }
+
+    @media (max-width: 767px){
+      .hero-title{
+        font-size:1.7rem;
+      }
+
+      .wish-item{
+        grid-template-columns:1fr;
+      }
+
+      .wish-img-wrap{
+        max-width:160px;
+      }
+
+      .action-wrap{
+        width:100%;
+      }
+
+      .action-btn{
+        width:100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="floating-shapes">
+    <span class="shape s1"></span>
+    <span class="shape s2"></span>
+    <span class="shape s3"></span>
+  </div>
+
+  <%- include('partials/navbar') %>
+
+  <div class="container page-wrap">
+    <div class="hero-card">
+      <div class="hero-title">My Wishlist</div>
+      <p class="hero-sub">Save your favorite books and come back anytime to buy them later.</p>
+    </div>
+
+    <% if (!items || !items.length) { %>
+      <div class="empty-card">
+        <div class="empty-icon">
+          <i class="bi bi-heart"></i>
+        </div>
+        <div class="empty-title">Your wishlist is empty</div>
+        <p class="empty-sub">Add books you love and they will appear here for quick access later.</p>
+        <a href="/books" class="btn btn-primary browse-btn">
+          <i class="bi bi-book"></i> Browse Books
+        </a>
+      </div>
+    <% } else { %>
+      <div class="wish-card">
+        <% items.forEach((b) => { 
+          const finalPrice = Math.max(0, Number(b.price || 0) - Math.round((Number(b.price || 0) * Number(b.discount || 0)) / 100));
+        %>
+          <div class="wish-item">
+            <div class="wish-img-wrap">
+              <img
+                src="<%= b.image || '/uploads/default.png' %>"
+                alt="<%= b.name %>"
+                class="wish-img"
+                onerror="this.onerror=null;this.src='/uploads/default.png'"
+              >
+            </div>
+
+            <div>
+              <div class="wish-cat"><%= b.category_name || 'Book' %></div>
+              <div class="wish-title"><%= b.name %></div>
+              <div class="wish-author"><i class="bi bi-person"></i> <%= b.author %></div>
+
+              <div class="wish-meta">
+                <span><i class="bi bi-box"></i> Stock: <%= b.available %></span>
+                <span><i class="bi bi-tag"></i> Discount: <%= Number(b.discount || 0) %>%</span>
+              </div>
+
+              <div class="wish-price">₹<%= finalPrice %></div>
+            </div>
+
+            <div class="action-wrap">
+              <a href="/books/<%= b.id %>" class="action-btn btn-view">
+                <i class="bi bi-eye"></i> View
+              </a>
+
+              <a href="/cart/add/<%= b.id %>" class="action-btn btn-cart">
+                <i class="bi bi-cart-plus"></i> Add to Cart
+              </a>
+
+              <a href="/wishlist/remove/<%= b.id %>" class="action-btn btn-remove">
+                <i class="bi bi-trash"></i> Remove
+              </a>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+
+  <%- include('partials/footer') %>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

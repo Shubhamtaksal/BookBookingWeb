@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checkout • BookHub</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/navbar.css">
+  <link rel="stylesheet" href="/css/common-footer.css">
+
+  <style>
+    :root{
+      --bh-bg:#f6f8fc;
+      --bh-card:#ffffff;
+      --bh-text:#0f172a;
+      --bh-muted:#64748b;
+      --bh-border:#e6eaf2;
+      --bh-primary:#2563eb;
+      --bh-primary2:#0ea5e9;
+      --bh-success:#16a34a;
+      --bh-danger:#ef4444;
+      --bh-shadow:0 18px 45px rgba(15,23,42,.10);
+      --bh-shadow2:0 10px 28px rgba(15,23,42,.08);
+      --bh-radius:24px;
+      --bh-radius2:30px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{overflow-x:hidden}
+
+    body{
+      background:
+        radial-gradient(circle at top left, rgba(37,99,235,.10), transparent 22%),
+        radial-gradient(circle at top right, rgba(14,165,233,.08), transparent 18%),
+        linear-gradient(180deg,#f8fbff,#eef4ff);
+      color:var(--bh-text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    }
+
+    .page-wrap{
+      padding:26px 0 48px;
+      position:relative;
+      z-index:1;
+    }
+
+    .floating-shapes{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+      z-index:0;
+    }
+
+    .shape{
+      position:absolute;
+      border-radius:50%;
+      filter:blur(10px);
+      opacity:.22;
+      animation:floatShape 12s ease-in-out infinite;
+    }
+
+    .shape.s1{
+      width:180px;height:180px;
+      background:rgba(37,99,235,.18);
+      left:-40px;top:120px;
+    }
+
+    .shape.s2{
+      width:220px;height:220px;
+      background:rgba(14,165,233,.15);
+      right:-60px;top:180px;
+      animation-delay:2s;
+    }
+
+    .shape.s3{
+      width:140px;height:140px;
+      background:rgba(37,99,235,.12);
+      left:20%;bottom:80px;
+      animation-delay:4s;
+    }
+
+    @keyframes floatShape{
+      0%,100%{transform:translateY(0) translateX(0)}
+      50%{transform:translateY(-16px) translateX(8px)}
+    }
+
+    .hero-card,
+    .checkout-card,
+    .summary-card{
+      background:linear-gradient(135deg, rgba(255,255,255,.96), rgba(255,255,255,.90));
+      border:1px solid rgba(255,255,255,.78);
+      border-radius:var(--bh-radius2);
+      box-shadow:var(--bh-shadow);
+    }
+
+    .hero-card{
+      padding:24px;
+      margin-bottom:22px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero-card::before{
+      content:"";
+      position:absolute;
+      width:280px;
+      height:280px;
+      right:-90px;
+      top:-90px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(37,99,235,.14), transparent 65%);
+    }
+
+    .hero-title{
+      font-size:2.15rem;
+      font-weight:900;
+      line-height:1.1;
+      margin-bottom:6px;
+    }
+
+    .hero-sub{
+      color:var(--bh-muted);
+      margin-bottom:0;
+    }
+
+    .back-btn{
+      border-radius:14px;
+      font-weight:900;
+      min-height:46px;
+      padding:0 16px;
+    }
+
+    .step-wrap{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin:18px 0 0;
+    }
+
+    .step-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid var(--bh-border);
+      background:#fff;
+      color:#334155;
+      font-size:.84rem;
+      font-weight:900;
+      box-shadow:var(--bh-shadow2);
+    }
+
+    .step-chip.active{
+      background:#eef4ff;
+      color:var(--bh-primary);
+      border-color:#cfe0ff;
+    }
+
+    .checkout-card{
+      padding:22px;
+      margin-bottom:20px;
+    }
+
+    .section-title{
+      font-size:1.22rem;
+      font-weight:900;
+      margin-bottom:6px;
+    }
+
+    .section-sub{
+      color:var(--bh-muted);
+      margin-bottom:18px;
+      font-size:.93rem;
+    }
+
+    .item-card{
+      display:grid;
+      grid-template-columns:90px 1fr 90px;
+      gap:16px;
+      align-items:start;
+      padding:16px;
+      border:1px solid var(--bh-border);
+      border-radius:22px;
+      background:#fff;
+      box-shadow:var(--bh-shadow2);
+    }
+
+    .item-img-wrap{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:linear-gradient(180deg,#f8fbff,#ffffff);
+      border:1px solid var(--bh-border);
+      border-radius:18px;
+      padding:8px;
+      min-height:120px;
+    }
+
+    .item-img{
+      width:70px;
+      height:96px;
+      object-fit:cover;
+      border-radius:12px;
+      background:#fff;
+      border:1px solid rgba(0,0,0,.05);
+      box-shadow:0 10px 20px rgba(15,23,42,.10);
+    }
+
+    .item-cat{
+      color:var(--bh-primary);
+      font-size:.8rem;
+      font-weight:800;
+      margin-bottom:4px;
+    }
+
+    .item-title{
+      font-size:1.02rem;
+      font-weight:900;
+      line-height:1.35;
+      margin-bottom:4px;
+    }
+
+    .item-author{
+      color:var(--bh-muted);
+      font-size:.9rem;
+      margin-bottom:8px;
+    }
+
+    .item-meta{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      color:#334155;
+      font-size:.84rem;
+      font-weight:700;
+    }
+
+    .item-price{
+      text-align:right;
+      font-size:1.18rem;
+      font-weight:900;
+      color:var(--bh-primary);
+    }
+
+    .soft-label{
+      font-weight:800;
+      color:#111827;
+      margin-bottom:8px;
+      font-size:.95rem;
+    }
+
+    .soft-input,
+    .soft-select,
+    .soft-textarea{
+      min-height:54px;
+      border-radius:16px;
+      border:1px solid #dbe3ef;
+      box-shadow:none !important;
+      padding-left:14px;
+      padding-right:14px;
+      font-weight:600;
+    }
+
+    .soft-textarea{
+      min-height:110px;
+      resize:none;
+      padding-top:12px;
+    }
+
+    .soft-input:focus,
+    .soft-select:focus,
+    .soft-textarea:focus{
+      border-color:#60a5fa;
+    }
+
+    .next-btn,
+    .place-btn,
+    .rzp-btn{
+      width:100%;
+      min-height:54px;
+      border:none;
+      border-radius:18px;
+      font-weight:900;
+      transition:.25s ease;
+    }
+
+    .next-btn,
+    .place-btn{
+      background:linear-gradient(135deg,#0f172a,#2563eb);
+      color:#fff;
+      box-shadow:0 18px 30px rgba(37,99,235,.20);
+    }
+
+    .next-btn:hover,
+    .place-btn:hover,
+    .rzp-btn:hover{
+      transform:translateY(-2px);
+    }
+
+    .rzp-btn{
+      background:#fff;
+      color:var(--bh-text);
+      border:1px solid var(--bh-border);
+    }
+
+    .summary-card{
+      padding:22px;
+      position:sticky;
+      top:20px;
+      overflow:hidden;
+    }
+
+    .summary-card::before{
+      content:"";
+      position:absolute;
+      width:220px;
+      height:220px;
+      right:-70px;
+      top:-70px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(37,99,235,.12), transparent 70%);
+      pointer-events:none;
+    }
+
+    .summary-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:#eef4ff;
+      color:var(--bh-primary);
+      font-size:.82rem;
+      font-weight:900;
+      margin-bottom:12px;
+    }
+
+    .summary-title{
+      font-size:1.22rem;
+      font-weight:900;
+      margin-bottom:6px;
+    }
+
+    .summary-sub{
+      color:var(--bh-muted);
+      margin-bottom:16px;
+      font-size:.92rem;
+    }
+
+    .summary-row{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:12px;
+      color:#334155;
+      font-weight:700;
+    }
+
+    .summary-total{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      border-top:1px solid #e6edf7;
+      padding-top:14px;
+      margin-top:14px;
+      font-size:1.24rem;
+      font-weight:900;
+      color:#111827;
+    }
+
+    .summary-note{
+      margin-top:12px;
+      display:flex;
+      align-items:flex-start;
+      gap:8px;
+      padding:12px;
+      border-radius:16px;
+      background:#f8fbff;
+      border:1px solid #e6edf7;
+      color:#475569;
+      font-size:.84rem;
+      font-weight:700;
+    }
+
+    .hidden-step{
+      display:none;
+    }
+
+    .show-step{
+      display:block;
+    }
+
+    .alert{
+      border-radius:16px;
+      font-weight:700;
+    }
+
+    @media (max-width: 991px){
+      .item-card{
+        grid-template-columns:90px 1fr;
+      }
+
+      .item-price{
+        grid-column:1 / -1;
+        text-align:left;
+      }
+    }
+
+    @media (max-width: 767px){
+      .hero-card,
+      .checkout-card,
+      .summary-card{
+        border-radius:24px;
+      }
+
+      .hero-title{
+        font-size:1.8rem;
+      }
+
+      .item-card{
+        grid-template-columns:1fr;
+      }
+
+      .item-img-wrap{
+        max-width:160px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="floating-shapes">
+    <span class="shape s1"></span>
+    <span class="shape s2"></span>
+    <span class="shape s3"></span>
+  </div>
+
+  <%- include('partials/navbar') %>
+
+  <div class="container page-wrap">
+    <div class="hero-card d-flex justify-content-between align-items-center flex-wrap gap-3">
+      <div>
+        <div class="hero-title">Complete Your Order</div>
+        <p class="hero-sub">Review your books, fill delivery details, and continue with a cleaner checkout flow.</p>
+
+        <div class="step-wrap">
+          <div class="step-chip active" id="chip-step-1">
+            <i class="bi bi-bag"></i> Step 1: Order Items
+          </div>
+          <div class="step-chip" id="chip-step-2">
+            <i class="bi bi-geo-alt"></i> Step 2: Delivery Details
+          </div>
+        </div>
+      </div>
+
+      <a href="/cart" class="btn btn-outline-secondary back-btn">
+        <i class="bi bi-arrow-left"></i> Back to Cart
+      </a>
+    </div>
+
+    <% if (error) { %>
+      <div class="alert alert-danger mb-4">
+        <i class="bi bi-exclamation-triangle"></i> <%= error %>
+      </div>
+    <% } %>
+
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <div class="checkout-card show-step" id="step-1">
+          <div class="section-title">Order Items</div>
+          <div class="section-sub">Review all books in your order before continuing to address details.</div>
+
+          <div class="d-grid gap-3">
+            <% cart.forEach((item) => { 
+              const priceNow = item.finalPrice || Math.max(0, Number(item.price || 0) - Math.round((Number(item.price || 0) * Number(item.discount || 0)) / 100));
+            %>
+              <div class="item-card">
+                <div class="item-img-wrap">
+                  <img
+                    src="<%= item.image || '/uploads/default.png' %>"
+                    class="item-img"
+                    alt="<%= item.name %>"
+                    onerror="this.onerror=null;this.src='/uploads/default.png'"
+                  >
+                </div>
+
+                <div>
+                  <div class="item-cat"><%= item.category_name || 'Book' %></div>
+                  <div class="item-title"><%= item.name %></div>
+                  <div class="item-author"><i class="bi bi-person"></i> <%= item.author %></div>
+
+                  <div class="item-meta">
+                    <span><i class="bi bi-box"></i> Quantity: <%= item.qty %></span>
+                    <span><i class="bi bi-tag"></i> Price: ₹<%= priceNow %></span>
+                  </div>
+                </div>
+
+                <div class="item-price">₹<%= priceNow * Number(item.qty || 0) %></div>
+              </div>
+            <% }) %>
+          </div>
+
+          <div class="mt-4">
+            <button class="next-btn" type="button" id="goToStep2">
+              <i class="bi bi-arrow-right-circle"></i> Next: Delivery Details
+            </button>
+          </div>
+        </div>
+
+        <div class="checkout-card hidden-step" id="step-2">
+          <div class="section-title">Delivery Details</div>
+          <div class="section-sub">Fill all required fields. Only after that can you place the order or pay online.</div>
+
+          <form id="checkout-form" method="POST" action="/order/place">
+            <input type="hidden" name="payment_method" id="payment_method" value="COD">
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="soft-label">Full Name</label>
+                <input type="text" name="full_name" class="form-control soft-input" value="<%= formData?.full_name || '' %>" required>
+              </div>
+
+              <div class="col-md-6">
+                <label class="soft-label">Email Address</label>
+                <input type="email" name="email_address" class="form-control soft-input" value="<%= formData?.email_address || '' %>" required>
+              </div>
+
+              <div class="col-md-6">
+                <label class="soft-label">Phone Number</label>
+                <input type="text" name="phone" class="form-control soft-input" value="<%= formData?.phone || '' %>" placeholder="Enter 10 digit phone number" required>
+              </div>
+
+              <div class="col-md-6">
+                <label class="soft-label">City</label>
+                <input type="text" name="city" class="form-control soft-input" value="<%= formData?.city || '' %>" placeholder="Enter city" required>
+              </div>
+
+              <div class="col-md-6">
+                <label class="soft-label">Pincode</label>
+                <input type="text" name="pincode" class="form-control soft-input" value="<%= formData?.pincode || '' %>" placeholder="Enter 6 digit pincode" required>
+              </div>
+
+              <div class="col-md-6">
+                <label class="soft-label">Payment Method</label>
+                <select name="payment_method_select" id="payment_method_select" class="form-select soft-select">
+                  <option value="COD">Cash on Delivery</option>
+                  <% if (typeof razorpayEnabled !== 'undefined' && razorpayEnabled) { %>
+                    <option value="RAZORPAY">Pay with Razorpay</option>
+                  <% } %>
+                </select>
+              </div>
+
+              <div class="col-12">
+                <label class="soft-label">Full Address</label>
+                <textarea name="address_line" class="form-control soft-textarea" required placeholder="House no, street, area, landmark..."><%= formData?.address_line || '' %></textarea>
+              </div>
+            </div>
+
+            <div class="row g-3 mt-2">
+              <div class="col-md-6">
+                <button type="button" class="rzp-btn" id="backToStep1">
+                  <i class="bi bi-arrow-left-circle"></i> Back to Items
+                </button>
+              </div>
+
+              <div class="col-md-6">
+                <button type="submit" class="place-btn" id="codBtn">
+                  <i class="bi bi-bag-check"></i> Place Order
+                </button>
+              </div>
+
+              <% if (typeof razorpayEnabled !== 'undefined' && razorpayEnabled) { %>
+                <div class="col-12">
+                  <button type="button" class="rzp-btn" id="pay-now-btn">
+                    <i class="bi bi-credit-card-2-front"></i> Pay with Razorpay
+                  </button>
+                </div>
+              <% } %>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="summary-card">
+          <div class="summary-pill">
+            <i class="bi bi-receipt"></i> Order Summary
+          </div>
+
+          <div class="summary-title">Quick Summary</div>
+          <div class="summary-sub">Your final payable amount and order overview.</div>
+
+          <div class="summary-row">
+            <span>Items</span>
+            <span><%= cart.length %></span>
+          </div>
+
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span>₹<%= total %></span>
+          </div>
+
+          <div class="summary-row">
+            <span>Shipping</span>
+            <span>Free</span>
+          </div>
+
+          <div class="summary-row">
+            <span>Platform Fee</span>
+            <span>₹0</span>
+          </div>
+
+          <div class="summary-total">
+            <span>Total</span>
+            <span>₹<%= total %></span>
+          </div>
+
+          <div class="summary-note">
+            <i class="bi bi-info-circle"></i>
+            <span>Fill all delivery details properly. Address and order information should be saved in the database from the backend route.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%- include('partials/footer') %>
+
+  <% if (typeof razorpayEnabled !== 'undefined' && razorpayEnabled) { %>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <% } %>
+
+  <script>
+    const step1 = document.getElementById("step-1");
+    const step2 = document.getElementById("step-2");
+    const goToStep2 = document.getElementById("goToStep2");
+    const backToStep1 = document.getElementById("backToStep1");
+    const chip1 = document.getElementById("chip-step-1");
+    const chip2 = document.getElementById("chip-step-2");
+
+    function showStep(stepNo) {
+      if (stepNo === 1) {
+        step1.classList.remove("hidden-step");
+        step1.classList.add("show-step");
+        step2.classList.remove("show-step");
+        step2.classList.add("hidden-step");
+        chip1.classList.add("active");
+        chip2.classList.remove("active");
+      } else {
+        step2.classList.remove("hidden-step");
+        step2.classList.add("show-step");
+        step1.classList.remove("show-step");
+        step1.classList.add("hidden-step");
+        chip2.classList.add("active");
+        chip1.classList.remove("active");
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    goToStep2?.addEventListener("click", () => showStep(2));
+    backToStep1?.addEventListener("click", () => showStep(1));
+
+    const checkoutForm = document.getElementById("checkout-form");
+    const paymentMethodInput = document.getElementById("payment_method");
+    const paymentMethodSelect = document.getElementById("payment_method_select");
+    const codBtn = document.getElementById("codBtn");
+    const payBtn = document.getElementById("pay-now-btn");
+
+    function validateCheckoutForm() {
+      const formData = new FormData(checkoutForm);
+      const payload = Object.fromEntries(formData.entries());
+
+      if (!payload.full_name || !payload.email_address || !payload.phone || !payload.city || !payload.address_line || !payload.pincode) {
+        alert("Please fill all required delivery details.");
+        return null;
+      }
+
+      return payload;
+    }
+
+    paymentMethodSelect?.addEventListener("change", function () {
+      paymentMethodInput.value = this.value;
+      if (codBtn) {
+        codBtn.innerHTML = this.value === "COD"
+          ? '<i class="bi bi-bag-check"></i> Place COD Order'
+          : '<i class="bi bi-credit-card-2-front"></i> Continue';
+      }
+    });
+
+    codBtn?.addEventListener("click", function () {
+      paymentMethodInput.value = paymentMethodSelect?.value || "COD";
+    });
+
+    if (payBtn) {
+      payBtn.addEventListener("click", async function (e) {
+        e.preventDefault();
+
+        paymentMethodInput.value = "RAZORPAY";
+
+        const payload = validateCheckoutForm();
+        if (!payload) return;
+
+        try {
+          const orderRes = await fetch("/payment/create-order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({})
+          });
+
+          const orderData = await orderRes.json();
+
+          if (!orderData.success) {
+            alert(orderData.message || "Unable to create payment order.");
+            return;
+          }
+
+          const options = {
+            key: orderData.key,
+            amount: orderData.order.amount,
+            currency: orderData.order.currency,
+            name: "BookHub",
+            description: "Book Purchase Payment",
+            order_id: orderData.order.id,
+            prefill: {
+              name: payload.full_name || orderData.user?.name || "",
+              email: payload.email_address || orderData.user?.email || "",
+              contact: payload.phone || ""
+            },
+            theme: {
+              color: "#2563eb"
+            },
+            handler: async function (response) {
+              try {
+                const verifyRes = await fetch("/payment/verify", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    ...payload,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_signature: response.razorpay_signature
+                  })
+                });
+
+                const verifyData = await verifyRes.json();
+
+                if (verifyData.success) {
+                  window.location.href = verifyData.redirectUrl;
+                } else {
+                  alert(verifyData.message || "Payment verification failed.");
+                }
+              } catch (err) {
+                alert("Payment verification error.");
+              }
+            }
+          };
+
+          const rzp = new Razorpay(options);
+          rzp.open();
+        } catch (err) {
+          console.error(err);
+          alert("Payment initialization failed.");
+        }
+      });
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
